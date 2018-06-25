@@ -1,2 +1,2 @@
 # sistina
-Import of musical sources from sistina from filemaker to marcxml and muscat
+Import of musical sources from sistina from filemaker to marcxml and muscat.
