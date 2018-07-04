@@ -1,6 +1,9 @@
 class Piece < ApplicationRecord
   belongs_to :code
-  validates_presence_of :nr
-  validates_presence_of :cs
-  validates_presence_of :title
+  has_many :concordances, dependent: :destroy
+  validates_presence_of :nr, :cs, :title
+  # Cathastrophic workaround for `no method for 'done='` Error
+  def done=(x)
+    true
+  end
 end

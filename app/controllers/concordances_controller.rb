@@ -33,7 +33,7 @@ class ConcordancesController < ApplicationController
   private
   
   def concordance_params
-    params.permit(:nr, :ccd0)
+    params.permit(:nr, :ccd0, :title)
   end
 
   def set_concordance

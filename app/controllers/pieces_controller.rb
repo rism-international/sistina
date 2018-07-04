@@ -1,21 +1,21 @@
 class PiecesController < ApplicationController
-  before_action :set_piece, only: [:show, :update, :destroy]
+  before_action :set_code
+  before_action :set_code_piece, only: [:show, :update, :destroy]
 
   # GET /pieces
   def index
-    @pieces = Piece.all
-    json_response(@pieces)
+    json_response(@code.pieces)
   end
 
-  # POST /pieces
-  def create
-    @piece = Piece.create!(piece_params)
-    json_response(@piece, :created)
-  end
-  
   # GET /pieces/:id
   def show
     json_response(@piece)
+  end
+  #
+  # POST /pieces
+  def create
+    @code.pieces.create!(piece_params)
+    json_response(@code, :created)
   end
   
   # PUT /pieces/:id
@@ -33,11 +33,15 @@ class PiecesController < ApplicationController
   private
   
   def piece_params
-    params.permit(:cs, :nr, :title)
+    params.permit(:cs, :nr, :title, :done)
   end
 
-  def set_piece
-    @piece = Piece.find(params[:id])
+  def set_code
+    @code = Code.find(params[:code_id])
+  end
+
+  def set_code_piece
+    @code = @code.pieces.find_by!(id: params[:id]) if @code
   end
 end
 
