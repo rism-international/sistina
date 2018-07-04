@@ -1,6 +1,8 @@
 FactoryBot.define do
   factory :concordance do
-    title {Faker::TwinPeaks.quote}
+    nr {Faker::Number.number(10)}
     ccd0 {Faker::StarWars.quote}
+    done false
+    piece_id nil
   end
 end

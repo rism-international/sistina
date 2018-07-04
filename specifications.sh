@@ -1,0 +1,5 @@
+rails g model Code cs:string content:string type:string material:string n_:string size:string place:string date:string owner0:string title_comment:string binding_comment:string pagenumbering:string non0:string comment0:string non1:string non2:string comment1:string notation:string non3:string owner1:string
+rails g model Unit code:references type:string material:string comment0:string cs:string comment1:string pages:string comment2:string unit_nr:integer comment3:string non0:string comment4:string comment5:string owner:string non1:string size:string non2:string non3:string color0:string color1:string color2:string color3:string comment6.string
+rails g model Piece code:references nr:integer cs:string current:integer original:string fol:string title:string title0:string composer:string
+rails g model Concordance piece:references nr:integer ccd0:string ccd1:string ccd2:string comment:string composer:string title:string
+rails g model Part piece:references nr:integer part_nr:string part_fol:string title:string composer:string textincipit:string voicesincipit:string

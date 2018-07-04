@@ -12,7 +12,7 @@ RSpec.describe 'Concordances API', type: :request do
       expect(json.size).to eq(10)
     end
 
-    it 'returns status code 200' do
+    it 'returns status concordance 200' do
       expect(response).to have_http_status(200)
     end
   end
@@ -43,22 +43,22 @@ RSpec.describe 'Concordances API', type: :request do
   end
 
   describe 'POST /concordances' do
-    let(:valid_attributes) { { title: 'Example', ccd0: '1' } }
+    let(:valid_attributes) { { nr: '1', ccd0: 'Something can be said' } }
 
     context 'when the request is valid' do
       before { post '/concordances', params: valid_attributes }
 
       it 'creates a concordance' do
-        expect(json['title']).to eq('Example')
+        expect(json['nr']).to eq('1')
       end
 
-      it 'returns status code 201' do
+      it 'returns status concordance 201' do
         expect(response).to have_http_status(201)
       end
     end
 
     context 'when the request is invalid' do
-      before { post '/concordances', params: { title: 'Foobar' } }
+      before { post '/concordances', params: { nr: '2' } }
 
       it 'returns a validation failure message' do
         expect(response.body)
@@ -68,7 +68,7 @@ RSpec.describe 'Concordances API', type: :request do
   end
 
   describe 'PUT /concordances/:id' do
-    let(:valid_attributes) { { title: 'Shopping' } }
+    let(:valid_attributes) { { nr: '3' } }
 
     context 'when the record exists' do
       before { put "/concordances/#{concordance_id}", params: valid_attributes }
@@ -86,7 +86,7 @@ RSpec.describe 'Concordances API', type: :request do
   describe 'DELETE /concordances/:id' do
     before { delete "/concordances/#{concordance_id}" }
 
-    it 'returns status code 204' do
+    it 'returns status concordance 204' do
       expect(response).to have_http_status(204)
     end
   end

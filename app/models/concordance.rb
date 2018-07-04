@@ -1,4 +1,5 @@
 class Concordance < ApplicationRecord
-  has_many :pieces, dependent: :destroy
-  validates_presence_of :title, :ccd0
+  belongs_to :piece
+  validates_presence_of :nr
+  validates_presence_of :ccd0
 end

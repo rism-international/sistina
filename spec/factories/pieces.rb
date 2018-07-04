@@ -1,7 +1,9 @@
 FactoryBot.define do
   factory :piece do
-    current {Faker::Number.number(10)}
+    nr {Faker::Number.number(10)}
+    cs {Faker::StarWars.droid}
+    title {Faker::StarWars.droid}
     done false
-    concordance_id nil
+    code_id nil
   end
 end
