@@ -1,36 +1,76 @@
 require 'rails_helper'
 
-RSpec.describe 'Concordances API', type: :request do
-  let!(:concordances) {create_list(:concordance, 10)}
-  let(:concordance_id) {concordances.first.id}
+RSpec.describe 'Concordances API' do
+  let!(:code) { create(:code) }
+  let(:code_id) { code.id }
+  let!(:pieces) { create_list(:piece, 2, code_id: code.id) }
+  let(:piece_id) { pieces.first.id }
+  let(:concordances) { create_list(:concordance, 40, piece_id: pieces.first.id) }
+  let(:id) { concordances.first.id }
 
-  describe 'GET /concordances' do
-    before { get '/concordances' }
+  describe 'GET /codes/:code_id/pieces/:piece_id/concordances' do
+    before { get "/codes/#{code_id}/pieces/#{piece_id}/concordances" }
 
-    it 'returns concordances' do
-      expect(json).not_to be_empty
-      expect(json.size).to eq(10)
-    end
-
-    it 'returns status concordance 200' do
-      expect(response).to have_http_status(200)
-    end
-  end
-  describe 'GET /concordances/:id' do
-    before { get "/concordances/#{concordance_id}" }
-
-    context 'when the record exists' do
-      it 'returns the concordance' do
-        expect(json).not_to be_empty
-        expect(json['id']).to eq(concordance_id)
-      end
-
+    context 'when code exists' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
+
+      it 'returns all pieces' do
+        expect(json.size).to eq(2)
+      end
     end
-    context 'when the record does not exists' do
-      let(:concordance_id) {100}
+    
+    context 'when code does not exist' do
+      let(:code_id) {0}
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns a not found message' do
+        expect(response.body).to match(/Couldn't find Code/)
+      end
+    end
+ 
+    context 'when piece exists' do
+      it 'returns staus code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns all concordances' do
+        expect(json.size).to eq(40)
+      end
+    end
+
+    context 'when piece does not exist' do
+      let(:piece_id) {0}
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns a not found message' do
+        expect(response.body).to match(/Couldn't find Piece/)
+      end
+    end
+  end
+    
+  describe 'GET /codes/:code_id/pieces/:piece_id/concordances/:id' do
+    before { get "/codes/#{code_id}/pieces/#{piece_id}/concordances/#{id}" }
+
+    context 'when piece exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+      
+      it 'returns the concordance' do
+        expect(json['id']).to eq(id)
+      end
+    end
+
+    context 'when piece does not exist' do
+      let(:id) {0}
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -42,51 +82,65 @@ RSpec.describe 'Concordances API', type: :request do
     end
   end
 
-  describe 'POST /concordances' do
-    let(:valid_attributes) { { nr: '1', ccd0: 'Something can be said' } }
+  describe 'POST /codes/:code_id/pieces/:piece_id/concordances' do
+    let(:valid_attributes) { { nr: '9876', ccd0: 'with the lights out, its less dagerous', title: 'Smells like teen spirit' } }
 
     context 'when the request is valid' do
-      before { post '/concordances', params: valid_attributes }
+      before { post "/codes/#{code_id}/pieces/#{piece_id}/concordances", params: valid_attributes }
 
-      it 'creates a concordance' do
-        expect(json['nr']).to eq('1')
-      end
-
-      it 'returns status concordance 201' do
+      it 'returns status code 201' do
         expect(response).to have_http_status(201)
       end
     end
 
     context 'when the request is invalid' do
-      before { post '/concordances', params: { nr: '2' } }
+      before { post "/codes/#{code_id}/pieces/#{piece_id}/concordances", params: {} }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Ccd0 can't be blank/)
+          .to match(/Validation failed: Nr can't be blank, Ccd0 can't be blank, Title can't be blank/)
       end
     end
   end
 
-  describe 'PUT /concordances/:id' do
-    let(:valid_attributes) { { nr: '3' } }
+  describe 'PUT /codes/:code_id/pieces/:piece_id/concordances/:id' do
+    let(:valid_attributes) { { nr: '8234', title: 'Hey Ya', ccd0: 'you think you got it, ohh you think you got it' } }
 
-    context 'when the record exists' do
-      before { put "/concordances/#{concordance_id}", params: valid_attributes }
+    before { put "/codes/#{code_id}/pieces/#{piece_id}/concordances/#{id}", params: valid_attributes }
 
-      it 'updates the record' do
-        expect(response.body).to be_empty
-      end
-
+    context 'when concordance exists' do
       it 'returns status code 204' do
         expect(response).to have_http_status(204)
       end
+
+      it 'updates concordance' do
+        updated_concordance = Concordance.find(id)
+        expect(updated_concordance.title).to match(/Hey Ya/)
+      end
+    end
+
+    context 'when concordance does not exist' do
+      let(:id) {0}
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns a not found message' do
+        expect(response.body).to match(/Couldn't find Concordance/)
+      end
     end
   end
 
-  describe 'DELETE /concordances/:id' do
-    before { delete "/concordances/#{concordance_id}" }
 
-    it 'returns status concordance 204' do
+  describe 'DELETE /codes/:id/piece/:piece_id' do
+    before { delete "/codes/#{code_id}/pieces/#{piece_id}/concordances/#{id}" }
+
+    it 'returns status piece 204' do
       expect(response).to have_http_status(204)
     end
   end

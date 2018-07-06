@@ -2,7 +2,8 @@ FactoryBot.define do
   factory :concordance do
     nr {Faker::Number.number(10)}
     ccd0 {Faker::StarWars.quote}
-    done false
-    piece_id nil
+    title {Faker::StarWars.planet}
+#    done false
+    association :piece
   end
 end

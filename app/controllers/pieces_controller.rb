@@ -33,7 +33,7 @@ class PiecesController < ApplicationController
   private
   
   def piece_params
-    params.permit(:cs, :nr, :title, :done)
+    params.permit(:cs, :nr, :title)
   end
 
   def set_code
@@ -41,7 +41,7 @@ class PiecesController < ApplicationController
   end
 
   def set_code_piece
-    @code = @code.pieces.find_by!(id: params[:id]) if @code
+    @piece = @code.pieces.find_by!(id: params[:id]) if @code
   end
 end
 

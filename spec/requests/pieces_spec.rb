@@ -59,7 +59,7 @@ RSpec.describe 'Pieces API' do
   end
 
   describe 'POST /codes/:code_id/pieces' do
-    let(:valid_attributes) { { cs: '1', nr: '2000', title: 'Canciones', done: false } }
+    let(:valid_attributes) { { cs: '1', nr: '2000', title: 'Canciones' } }
 
     context 'when the request is valid' do
       before { post "/codes/#{code_id}/pieces", params: valid_attributes }
@@ -78,7 +78,7 @@ RSpec.describe 'Pieces API' do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Cs can't be blank/)
+          .to match(/Validation failed: Nr can't be blank, Cs can't be blank, Title can't be blank/)
       end
     end
   end
@@ -95,7 +95,7 @@ RSpec.describe 'Pieces API' do
 
       it 'updates piece' do
         updated_piece = Piece.find(id)
-        expect(response.body).to match(/Cantaten/)
+        expect(updated_piece.title).to match(/Cantaten/)
       end
     end
 
