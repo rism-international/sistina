@@ -14,8 +14,8 @@ class PiecesController < ApplicationController
   #
   # POST /pieces
   def create
-    @code.pieces.create!(piece_params)
-    json_response(@code, :created)
+    @piece.create!(piece_params)
+    json_response(@piece, :created)
   end
   
   # PUT /pieces/:id
