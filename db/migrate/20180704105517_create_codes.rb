@@ -1,6 +1,5 @@
 class CreateCodes < ActiveRecord::Migration[5.2]
-  def change
-    drop_table :codes
+  def up
     create_table :codes do |t|
       t.string :cs                  # 13.000
       t.string :non10

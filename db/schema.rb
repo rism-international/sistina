@@ -12,6 +12,50 @@
 
 ActiveRecord::Schema.define(version: 2018_07_04_105517) do
 
+  create_table "codes", force: :cascade do |t|
+    t.string "cs"
+    t.string "non10"
+    t.string "content"
+    t.string "t_"
+    t.string "material"
+    t.string "n_"
+    t.string "size"
+    t.string "place"
+    t.string "date"
+    t.string "owner0"
+    t.string "title_comment"
+    t.string "binding_comment"
+    t.string "pagenumbering"
+    t.string "non0"
+    t.string "non4"
+    t.string "comment0"
+    t.string "non1"
+    t.string "non2"
+    t.string "comment1"
+    t.string "non11"
+    t.string "notation"
+    t.string "non3"
+    t.string "owner1"
+    t.string "non12"
+    t.string "non5"
+    t.string "non13"
+    t.string "non6"
+    t.string "comment2"
+    t.string "non7"
+    t.string "libsig"
+    t.string "lit"
+    t.string "non14"
+    t.string "non8"
+    t.string "sig0"
+    t.string "non15"
+    t.string "non9"
+    t.string "sig1"
+    t.string "sig2"
+    t.string "comment3"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "concordances", force: :cascade do |t|
     t.integer "nr"
     t.string "ccd0"
