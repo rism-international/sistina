@@ -33,7 +33,45 @@ class CodesController < ApplicationController
   private
   
   def code_params
-    params.permit(:cs, :content, :t_)
+    params.permit(
+      :cs, :content, :t_,
+      :material,
+      :n_,
+      :size,
+      :place,
+      :date,
+      :owner0,
+      :title_comment,
+      :binding_comment,
+      :pagenumbering,
+      :non10,
+      :non0,
+      :non4,
+      :comment0,
+      :non1,
+      :non2,
+      :comment1,
+      :non11,
+      :notation,
+      :non3,
+      :owner1,
+      :non12,
+      :non5,
+      :non13,
+      :non6,
+      :comment2,
+      :non7,
+      :libsig,
+      :lit,
+      :non14,
+      :non8,
+      :sig0,
+      :non15,
+      :non9,
+      :sig1,
+      :sig2,
+      :comment3  
+    )
   end
 
   def set_code

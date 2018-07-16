@@ -5,7 +5,7 @@ RSpec.describe 'Parts API' do
   let(:code_id) { code.id }
   let!(:pieces) { create_list(:piece, 2, code_id: code.id) }
   let(:piece_id) { pieces.first.id }
-  let!(:parts) { create_list(:part, 5, piece_id: pieces.first.id) }
+  let!(:parts) { create_list(:part, 12, piece_id: pieces.first.id) }
   let(:id) { parts.first.id }
 
   describe 'GET /parts' do
@@ -13,7 +13,7 @@ RSpec.describe 'Parts API' do
 
     it 'returns parts' do
       expect(json).not_to be_empty
-      expect(json.size).to eq(5)
+      expect(json.size).to eq(12)
     end
 
     it 'returns status code 200' do
@@ -48,14 +48,14 @@ RSpec.describe 'Parts API' do
   end
   describe 'POST /parts' do
     let(:valid_attributes) { 
-      { nr: '3030', composer: 'Nirvana', title: 'Smells like teen spirit', piece_id: piece_id } 
+      { nr: '9876', ccd0: 'with the lights out, its less dagerous', title: 'Smells like teen spirit', piece_id: piece_id } 
     }
 
     context 'when the request is valid' do
       before { post "/parts", params: valid_attributes }
 
       it 'creates a part' do
-        expect(json['nr']).to eq(3030)
+        expect(json['nr']).to eq(9876)
       end
 
       it 'returns status code 201' do
@@ -73,7 +73,7 @@ RSpec.describe 'Parts API' do
       it 'returns a validation failure message' do
         expect(response.body)
           .to match(
-            /Validation failed: Piece must exist, Nr can't be blank, Title can't be blank, Composer can't be blank/
+            /Validation failed: Piece must exist, Nr can't be blank, Ccd0 can't be blank, Title can't be blank/
         )
       end
     end
@@ -81,9 +81,9 @@ RSpec.describe 'Parts API' do
 
   describe 'PUT /parts/:id' do
     let(:valid_attributes) { { 
-      nr: '1010', 
+      nr: '8234', 
       title: 'Hey Ya', 
-      composer: 'Outcast'
+      ccd0: 'you think you got it, ohh you think you got it' 
     } }
 
     before { put "/parts/#{id}", params: valid_attributes }

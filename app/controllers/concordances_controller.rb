@@ -1,25 +1,20 @@
 class ConcordancesController < ApplicationController
-  before_action :set_code
-  before_action :set_code_piece
-  before_action :set_code_piece_concordance, only: [:show, :update, :destroy]
+  before_action :set_concordance, only: [:show, :update, :destroy]
 
-  # GET /codes/:code_id/pieces/:pieces_id/concordances
   def index
-    json_response(@piece.concordances)
+    @concordances = Concordance.all
+    json_response(@concordances)
   end
 
-   # GET /codes/:code_id/pieces/:piece_id/concordances/:id
+  def create
+    @concordance = Concordance.create!(concordance_params)
+    json_response(@concordance, :created)
+  end
+  
   def show
     json_response(@concordance)
   end
   
-  # POST /codes/:code_id/pieces/:pieces_id/concordances
-  def create
-    @piece.concordances.create!(concordance_params)
-    json_response(@piece, :created)
-  end
-  
-  # PUT /code/:code_id/pieces/:pieces_id/concordances/:id
   def update
     @concordance.update(concordance_params)
     head :no_content
@@ -34,23 +29,11 @@ class ConcordancesController < ApplicationController
   private
   
   def concordance_params
-    params.permit(:nr, :ccd0, :title)
+    params.permit(:nr, :ccd0, :title, :piece_id)
   end
 
-  def pieces_params
-    params.permit(:nr, :cs, :title)
-  end
-
-  def set_code
-    @code = Code.find(params[:code_id])
-  end
-
-  def set_code_piece
-    @piece = Piece.find(params[:piece_id])
-  end
-
-  def set_code_piece_concordance
-    @concordance = @piece.concordances.find_by!(id: params[:id]) if @piece
+  def set_concordance
+    @concordance = Concordance.find(params[:id])
   end
 end
 

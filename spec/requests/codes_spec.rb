@@ -16,6 +16,7 @@ RSpec.describe 'Codes API', type: :request do
       expect(response).to have_http_status(200)
     end
   end
+
   describe 'GET /codes/:id' do
     before { get "/codes/#{code_id}" }
 
@@ -30,7 +31,7 @@ RSpec.describe 'Codes API', type: :request do
       end
     end
     context 'when the record does not exists' do
-      let(:code_id) {100}
+      let(:code_id) {0}
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -43,7 +44,9 @@ RSpec.describe 'Codes API', type: :request do
   end
 
   describe 'POST /codes' do
-    let(:valid_attributes) { { cs: '1', content: 'Something can be said', t_: 'Everything' } }
+    let(:valid_attributes) { 
+      { cs: '1', content: 'Something can be said', t_: 'Everything' } 
+    }
 
     context 'when the request is valid' do
       before { post '/codes', params: valid_attributes }

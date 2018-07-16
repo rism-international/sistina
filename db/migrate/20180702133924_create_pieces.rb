@@ -1,6 +1,5 @@
 class CreatePieces < ActiveRecord::Migration[5.2]
   def change
-    drop_table :pieces
     create_table :pieces do |t| 
       t.integer :nr
       t.string :cs

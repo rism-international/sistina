@@ -1,6 +1,5 @@
 class CreateConcordances < ActiveRecord::Migration[5.2]
   def change
-    drop_table :concordances
     create_table :concordances do |t|
       t.integer :nr
       t.string :ccd0

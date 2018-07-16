@@ -24,7 +24,7 @@ class CreateUnits < ActiveRecord::Migration[5.2]
       t.string :color3
       t.string :comment6
       
-      t. references :code, foreign_key: true
+      t.references :code, foreign_key: true
       t.timestamps
     end
   end
