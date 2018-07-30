@@ -46,8 +46,7 @@ RSpec.describe 'Pieces API', type: :request do
 
   describe 'POST /pieces' do
     let(:valid_attributes) { 
-      { cs: '1', nr: '2000', title: 'Canciones', code_id: code_id } 
-      #{ cs: '1', nr: '2000', title: 'Canciones' } 
+      { cs: '1', nr: '2000', title: 'Canciones' } 
     }
 
     context 'when the request is valid' do

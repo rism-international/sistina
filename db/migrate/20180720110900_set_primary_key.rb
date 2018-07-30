@@ -1,6 +1,7 @@
-class CreateCodes < ActiveRecord::Migration[5.2]
-  def change
-    create_table :codes do |t|
+class SetPrimaryKey < ActiveRecord::Migration[5.2]
+  def up
+    drop_table :codes
+    create_table :codes, :primary_key => :cs, :id => false do |t|
       t.string :cs                  # 13.000
       t.string :non10
       t.string :content             # Messen, Motetten
@@ -42,5 +43,9 @@ class CreateCodes < ActiveRecord::Migration[5.2]
       t.text :comment3     # 1. i-xxi (= 3-23), xxii-clxxxiii (= 25-186), röm (..)
       t.timestamps
     end
+  end
+  
+  def down
+    raise ActiveRecord::IrreversibleMigration
   end
 end

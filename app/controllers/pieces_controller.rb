@@ -33,7 +33,25 @@ class PiecesController < ApplicationController
   private
   
   def piece_params
-    params.permit(:cs, :nr, :title, :code_id)
+    params.permit(
+      :cs, :nr, :title, 
+      :non0,
+      :non1,
+      :lit,
+      :non2,
+      :pages,
+      :t_,
+      :non3,
+      :current,
+      :non4,
+      :non5,
+      :nr0,
+      :title0,
+      :title1,
+      :title2,
+      :composer,
+      :composer0
+    )
   end
 
   def set_piece

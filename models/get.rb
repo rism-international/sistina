@@ -15,6 +15,40 @@ class ImportSistina
     csv_files.find {|e| e.match(/St.cke/) }
   end
 
+  def pieces_uri
+    URI('http://localhost:3000/pieces')
+  end
+
+  def load_pieces
+    CSV.foreach(
+      pieces_file, 
+      :encoding => 'iso-8859-1:utf-8'
+    ) do |row|
+      Net::HTTP.post_form(
+        pieces_uri,
+        'non0' => row[0],
+        'non1' => row[1],
+        'cs' => row[2], 
+        'lit' => row[3], 
+        'non2' => row[4],
+        'pages' => row[5],
+        't_' => row[6],
+        'non3' => row[7],
+        'current' => row[8],
+        'title' => row[9],
+        'non4' => row[10],
+        'nr' => row[11], 
+        'non5' => row[12],
+        'nr0' => row[13], 
+        'title0' => row[14],
+        'title1' => row[15],
+        'title2' => row[16],
+        'composer' => row[17],
+        'composer0' => row[18],
+      )
+    end
+  end
+ 
   def parts_file
     csv_files.find {|e| e.match(/Teile/) }
   end
@@ -89,13 +123,17 @@ class ImportSistina
     csv_files.find {|e| e.match(/Einh/) }
   end
 
-  def load
+  def load_sample(num)
+    cntr = 0
+    item = []
     CSV.foreach(
-      codes_file, 
+      pieces_file, 
       :encoding => 'iso-8859-1:utf-8'
     ) do |row|
-      row
+      item << row if cntr < num
+      cntr += 1
     end
+    return item
   end
 
   def export_sample_files

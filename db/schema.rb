@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_04_105517) do
+ActiveRecord::Schema.define(version: 2018_07_20_110900) do
 
-  create_table "codes", force: :cascade do |t|
+  create_table "codes", id: false, force: :cascade do |t|
     t.string "cs"
     t.string "non10"
     t.string "content"
@@ -23,15 +23,15 @@ ActiveRecord::Schema.define(version: 2018_07_04_105517) do
     t.string "place"
     t.string "date"
     t.string "owner0"
-    t.string "title_comment"
-    t.string "binding_comment"
+    t.text "title_comment"
+    t.text "binding_comment"
     t.string "pagenumbering"
-    t.string "non0"
-    t.string "non4"
-    t.string "comment0"
-    t.string "non1"
-    t.string "non2"
-    t.string "comment1"
+    t.text "non0"
+    t.text "non4"
+    t.text "comment0"
+    t.text "non1"
+    t.text "non2"
+    t.text "comment1"
     t.string "non11"
     t.string "notation"
     t.string "non3"
@@ -40,10 +40,10 @@ ActiveRecord::Schema.define(version: 2018_07_04_105517) do
     t.string "non5"
     t.string "non13"
     t.string "non6"
-    t.string "comment2"
+    t.text "comment2"
     t.string "non7"
     t.string "libsig"
-    t.string "lit"
+    t.text "lit"
     t.string "non14"
     t.string "non8"
     t.string "sig0"
@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 2018_07_04_105517) do
     t.string "non9"
     t.string "sig1"
     t.string "sig2"
-    t.string "comment3"
+    t.text "comment3"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -85,25 +85,35 @@ ActiveRecord::Schema.define(version: 2018_07_04_105517) do
   end
 
   create_table "pieces", force: :cascade do |t|
-    t.integer "nr"
-    t.string "cs"
+    t.string "non0"
+    t.string "non1"
+    t.integer "cs"
+    t.string "lit"
+    t.string "non2"
+    t.string "pages"
+    t.string "t_"
+    t.string "non3"
     t.integer "current"
-    t.string "original"
-    t.string "fol"
     t.string "title"
+    t.string "non4"
+    t.integer "nr"
+    t.string "non5"
+    t.integer "nr0"
     t.string "title0"
+    t.string "title1"
+    t.string "title2"
     t.string "composer"
-    t.integer "code_id"
+    t.string "composer0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["code_id"], name: "index_pieces_on_code_id"
+    t.index ["cs"], name: "index_pieces_on_cs"
   end
 
   create_table "units", force: :cascade do |t|
     t.string "type"
     t.string "material"
     t.string "comment0"
-    t.string "cs"
+    t.integer "cs"
     t.string "comment1"
     t.string "pages"
     t.string "comment2"

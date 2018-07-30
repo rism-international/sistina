@@ -1,7 +1,7 @@
 class CreateCodes < ActiveRecord::Migration[5.2]
   def change
-    create_table :codes do |t|
-      t.string :cs                  # 13.000
+    create_table :codes, :primary_key => :cs, :id => false do |t|
+      t.integer :cs                  # 13.000
       t.string :non10
       t.string :content             # Messen, Motetten
       t.string :t_                  # Hs., Chorbuch mehrstimmig

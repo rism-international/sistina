@@ -1,9 +1,9 @@
 class CreatePieces < ActiveRecord::Migration[5.2]
   def change
-    create_table :pieces do |t| 
+    create_table :pieces, :primary_key => :cs, :id => false do |t| 
       t.string :non0
       t.string :non1
-      t.string :cs
+      t.integer :cs
       t.string :lit
       t.string :non2
       t.string :pages
