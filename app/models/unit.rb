@@ -1,5 +1,5 @@
 class Unit < ApplicationRecord
-  belongs_to :code
-  validates_presence_of :cs, :comment0, :code_id
+#  belongs_to :code, foreign_key: :cs
+  validates_presence_of :cs
 end
 

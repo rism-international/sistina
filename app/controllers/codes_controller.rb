@@ -75,7 +75,7 @@ class CodesController < ApplicationController
   end
 
   def set_code
-    @code = Code.find(params[:id])
+    @code = Code.find(params[:cs])
   end
 end
 

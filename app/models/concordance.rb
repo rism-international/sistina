@@ -1,4 +1,4 @@
 class Concordance < ApplicationRecord
-  belongs_to :piece
-  validates_presence_of :nr, :ccd0, :title, :piece_id
+#  belongs_to :piece
+  validates_presence_of :nr
 end

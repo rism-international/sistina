@@ -3,7 +3,7 @@ class CreatePieces < ActiveRecord::Migration[5.2]
     create_table :pieces do |t| 
       t.string :non0
       t.string :non1
-      t.string :cs
+      t.integer :cs
       t.string :lit
       t.string :non2
       t.string :pages
@@ -20,7 +20,6 @@ class CreatePieces < ActiveRecord::Migration[5.2]
       t.string :title2
       t.string :composer
       t.string :composer0
-      t.references :code, foreign_key: true
       t.timestamps
     end
   end

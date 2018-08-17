@@ -5,10 +5,9 @@ class CreateConcordances < ActiveRecord::Migration[5.2]
       t.string :ccd0
       t.string :ccd1
       t.string :ccd2
-      t.string :comment
+      t.text :comment
       t.string :composer
       t.string :title
-      t.references :piece, foreign_key: true
       t.timestamps
     end
   end

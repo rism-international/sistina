@@ -33,7 +33,32 @@ class UnitsController < ApplicationController
   private
   
   def unit_params
-    params.permit(:cs, :comment0, :code_id)
+    params.permit(
+      :t_,
+      :material,
+      :comment0,
+      :cs, :comment0,
+      :comment1,
+      :pages,
+      :comment2,
+      :unit_nr,
+      :comment3,
+      :notation,
+      :non0,
+      :comment5,
+      :comment6,
+      :comment7,
+      :owner,
+      :non1,
+      :size,
+      :non2,
+      :color0,
+      :color1,
+      :color2,
+      :color3,
+      :non3,
+      :comment8
+                 )
   end
 
   def set_unit

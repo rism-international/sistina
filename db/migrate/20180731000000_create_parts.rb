@@ -7,10 +7,11 @@ class CreateParts < ActiveRecord::Migration[5.2]
       t.string :title
       t.string :composer
       t.string :textincipit
-      t.string :voicesincipit
-      t.references :piece, foreign_key: true
-
+      t.string :voices
+      t.string :comment
       t.timestamps
     end
+    
+    #add_foreign_key pieces: "nr"
   end
 end

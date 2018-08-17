@@ -29,7 +29,9 @@ class ConcordancesController < ApplicationController
   private
   
   def concordance_params
-    params.permit(:nr, :ccd0, :title, :piece_id)
+    params.permit(
+      :id, :nr, :ccd0, :ccd1, :ccd2, :title, :composer, :comment
+    )
   end
 
   def set_concordance

@@ -28,7 +28,16 @@ class PartsController < ApplicationController
   private
 
   def part_params
-    params.permit(:nr, :title, :composer, :piece_id)
+    params.permit(
+      :nr, 
+      :part_nr,
+      :part_fol,
+      :title, 
+      :composer,
+      :textincipit,
+      :voices,
+      :comment
+    )
   end
 
   def set_part

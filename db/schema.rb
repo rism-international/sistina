@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_20_110900) do
+ActiveRecord::Schema.define(version: 2018_07_31_000001) do
 
   create_table "codes", id: false, force: :cascade do |t|
-    t.string "cs"
+    t.integer "cs"
     t.string "non10"
     t.string "content"
     t.string "t_"
@@ -61,13 +61,11 @@ ActiveRecord::Schema.define(version: 2018_07_20_110900) do
     t.string "ccd0"
     t.string "ccd1"
     t.string "ccd2"
-    t.string "comment"
+    t.text "comment"
     t.string "composer"
     t.string "title"
-    t.integer "piece_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["piece_id"], name: "index_concordances_on_piece_id"
   end
 
   create_table "parts", force: :cascade do |t|
@@ -77,11 +75,10 @@ ActiveRecord::Schema.define(version: 2018_07_20_110900) do
     t.string "title"
     t.string "composer"
     t.string "textincipit"
-    t.string "voicesincipit"
-    t.integer "piece_id"
+    t.string "voices"
+    t.string "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["piece_id"], name: "index_parts_on_piece_id"
   end
 
   create_table "pieces", force: :cascade do |t|
@@ -106,36 +103,35 @@ ActiveRecord::Schema.define(version: 2018_07_20_110900) do
     t.string "composer0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cs"], name: "index_pieces_on_cs"
   end
 
   create_table "units", force: :cascade do |t|
-    t.string "type"
+    t.string "t_"
     t.string "material"
     t.string "comment0"
     t.integer "cs"
     t.string "comment1"
     t.string "pages"
     t.string "comment2"
-    t.string "unit_nr"
+    t.integer "unit_nr"
     t.string "comment3"
+    t.string "notation"
     t.string "non0"
-    t.string "comment4"
     t.string "comment5"
+    t.string "comment6"
+    t.string "comment7"
     t.string "owner"
     t.string "non1"
     t.string "size"
     t.string "non2"
-    t.string "non3"
     t.string "color0"
     t.string "color1"
     t.string "color2"
     t.string "color3"
-    t.string "comment6"
-    t.integer "code_id"
+    t.string "non3"
+    t.string "comment8"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["code_id"], name: "index_units_on_code_id"
   end
 
 end
