@@ -23,7 +23,7 @@ class CreateCodes < ActiveRecord::Migration[5.2]
       t.string :non11             # [nur in cs 14 belegt => Comments]
       t.string :notation            # weiß mensural
       t.string :non3                # [=> Comments]
-      t.string :owner1              # Johannes Parvus
+      t.string :owner1              # Johannes Parvus (for prints: place: printer [gedruckt bei printer])
       t.string :non12               # [Nr. and type of systems]
       t.string :non5         # 8.000
       t.string :non13        # [=> Comments size]

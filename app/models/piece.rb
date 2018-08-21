@@ -2,12 +2,12 @@ class Piece < ApplicationRecord
 #  has_many :concordances
 #  has_many :parts
   validates_presence_of :nr
-  def build_xml
+  def build_xml(id)
     marcxml = FCS::Node.new
     marcxml.leader
     # To distinguish the Works from the Collections
     # the id is manipulated
-    marcxml.controlfield("001", id + 1000) # Some random value added to id
+    marcxml.controlfield("001", id) # Some random value added to id
     marcxml.datafield("100", "a", composer0) unless composer0.blank?
     # standardized title
     df = marcxml.datafield("240", "a", title)
@@ -35,8 +35,10 @@ class Piece < ApplicationRecord
         marcxml.addSubfield(df, "m", make_scoring(i)) unless make_scoring(i).blank?
       end
     end
+    # marcxml.datafield("773", "w", globalVariableWithTheRISMIDofTheParentCode)
     return marcxml.document
   end
+
 
   def make_titleOnSource
     if title0 == ""
