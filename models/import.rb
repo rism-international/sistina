@@ -252,5 +252,21 @@ module FCS    # Fondo Capella Sistina
         puts f + ":" + tab + cntr.to_s
       end
     end
+
+    def digivatlib
+      baseurl = "https://digi.vatlib.it/view/MSS_Capp.Sist."
+      n = 1
+      result = []
+      while n < 700 do
+        url = URI.parse(baseurl + n.to_s)
+        puts url
+        res = Net::HTTP.get_response(url)
+        if res.instance_of? Net::HTTPOK
+          result << n
+        end
+        n += 1
+      end
+      return result
+    end
   end
 end
