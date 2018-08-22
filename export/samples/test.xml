@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record xmlns="http://www.loc.gov/MARC21/slim">
+  <leader>00000ncc a2200000 u 4500</leader>
+  <controlfield tag="001">10100063000</controlfield>
+  <datafield tag="852" ind1=" " ind2=" ">
+    <subfield code="a">V-CVbav</subfield>
+    <subfield code="z">Fondo Cappella Sistina</subfield>
+    <subfield code="c">CS 63</subfield>
+    <subfield code="d">lib 02</subfield>
+    <subfield code="d">062</subfield>
+    <subfield code="d">063</subfield>
+    <subfield code="d">A063</subfield>
+  </datafield>
+  <datafield tag="593" ind1=" " ind2=" ">
+    <subfield code="a">Manuscript copy</subfield>
+  </datafield>
+  <datafield tag="245" ind1=" " ind2=" ">
+    <subfield code="a">Restaurationsblatt: "SEDENTE | BENEDCTO XIII | P. O. M. | Sub protectione E[minentissi]mi], &amp; R[everendissi]mi D. Petri Presbyt[eri] | CARD. OTTHOBONI | Tit. S. Laurentii in Damaso | S. R. E. ViceCancellarii | R. D. Petro Bastianello de Triviniano | magistro Capp. Pont. pro tempore existente | Restauravit Anno D. MDCCXXIV."</subfield>
+  </datafield>
+  <datafield tag="041" ind1=" " ind2=" ">
+    <subfield code="a">Latin</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Rom</subfield>
+    <subfield code="c">1495-1510</subfield>
+  </datafield>
+  <datafield tag="774" ind1=" " ind2=" ">
+    <subfield code="w">10100063001</subfield>
+    <subfield code="w">10100063001</subfield>
+    <subfield code="w">10100063002</subfield>
+    <subfield code="w">10100063003</subfield>
+    <subfield code="w">10100063004</subfield>
+    <subfield code="w">10100063005</subfield>
+    <subfield code="w">10100063006</subfield>
+    <subfield code="w">10100063007</subfield>
+    <subfield code="w">10100063008</subfield>
+    <subfield code="w">10100063009</subfield>
+    <subfield code="w">10100063010</subfield>
+    <subfield code="w">10100063011</subfield>
+    <subfield code="w">10100063012</subfield>
+    <subfield code="w">10100063013</subfield>
+    <subfield code="w">10100063014</subfield>
+    <subfield code="w">10100063015</subfield>
+    <subfield code="w">10100063016</subfield>
+    <subfield code="w">10100063017</subfield>
+    <subfield code="w">10100063018</subfield>
+    <subfield code="w">10100063019</subfield>
+  </datafield>
+</record>
