@@ -1,16 +1,27 @@
 class Piece < ApplicationRecord
 #  has_many :concordances
 #  has_many :parts
+  offset = 600
+  @rismid = offset 
+
+  class << self
+    attr_reader :rismid
+  end
+
+#  def initialize
+#    Piece.instance_eval { @rismid += 1 }
+#  end
+
+
   validates_presence_of :nr
-  def build_xml(id)
+  def build_xml(parent_record)
+    Piece.instance_eval { @rismid += 1 }
     marcxml = FCS::Node.new
     marcxml.leader
-    # To distinguish the Works from the Collections
-    # the id is manipulated
-    marcxml.controlfield("001", id) # Some random value added to id
+    marcxml.controlfield("001", Piece.rismid)
     marcxml.datafield("100", "a", composer0) unless composer0.blank?
     # standardized title
-    df = marcxml.datafield("240", "a", title)
+    df = marcxml.datafield("240", "a", make_title)
     marcxml.addSubfield(df, "m", make_totalScoring)
     # marcxml.datafield("594", "b", @partsVoicings) unless @partsVoicings.blank?
     # title on source
@@ -33,12 +44,29 @@ class Piece < ApplicationRecord
         marcxml.addSubfield(df, "c", 1)
         marcxml.addSubfield(df, "t", make_textIncipit(i)) unless make_textIncipit(i).blank?
         marcxml.addSubfield(df, "m", make_scoring(i)) unless make_scoring(i).blank?
+        # add language!
       end
     end
-    # marcxml.datafield("773", "w", globalVariableWithTheRISMIDofTheParentCode)
-    return marcxml.document
+    marcxml.datafield("773", "w", parent_record)
+    return Piece.rismid, marcxml.document
   end
 
+  def make_title
+    if title == ""              # Empty title
+      if t_ == ""               # gets either genre
+        if title0 == ""         # or, if genre is empty, title on surce
+          t = "[edit]"          # if they are all empty
+        else                    # it gets an edit-request
+          t = title0 
+        end
+      else
+        t = t_
+      end
+    else
+      t = title
+    end
+    return t
+  end
 
   def make_titleOnSource
     if title0 == ""
