@@ -31,3 +31,5 @@
 # also ignore muscat
 # should be a submodule
 muscat
+
+export/samples/test.xml

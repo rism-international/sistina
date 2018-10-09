@@ -19,6 +19,22 @@ class Code < ApplicationRecord
     marcxml = FCS::Node.new
     marcxml.leader
     marcxml.controlfield("001", Code.rismid)
+    marcxml.datafield("041", "a", "Latin")
+    marcxml.datafield("245", "a", make_titleOnSource)
+    df = marcxml.datafield("260", "a", make_place)
+    marcxml.addSubfield(df, "c", make_date)
+    marcxml.addSubfield(df, "8", 01)
+    # to Supplementary Material (525 $a)
+    marcxml.datafield("525", "a", @supplement) unless @supplement.blank?
+    df = marcxml.datafield("593", "a", make_type)
+    marcxml.addSubfield(df, "8", 01)
+
+    # if no Piece in Code throw error
+    ids, collection = make_content(Code.rismid, cs)
+    ids.each do |id|
+      df = marcxml.datafield("774", "w", id)
+    end
+
     df = marcxml.datafield("852", "a", "V-CVbav")
     marcxml.addSubfield(df, "z", "Fondo Cappella Sistina")
     marcxml.addSubfield(df, "c", "CS " + cs.to_s)
@@ -26,19 +42,6 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "d", sig0) unless sig0.blank?
     marcxml.addSubfield(df, "d", sig1) unless sig1.blank?
     marcxml.addSubfield(df, "d", sig2) unless sig2.blank?
-    marcxml.datafield("593", "a", make_type)
-    marcxml.datafield("245", "a", make_titleOnSource)
-    marcxml.datafield("041", "a", "Latin")
-    df = marcxml.datafield("260", "a", make_place)
-    marcxml.addSubfield(df, "c", make_date)
-    # to Supplementary Material (525 $a)
-    marcxml.datafield("525", "a", @supplement) unless @supplement.blank?
-
-    # if no Piece in Code throw error
-    ids, collection = make_content(Code.rismid, cs)
-    ids.each do |id|
-      df = marcxml.datafield("774", "w", id)
-    end
 
     # if digitized add link to 856
     unless not digivatlib.include?(cs)
