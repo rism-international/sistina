@@ -20,6 +20,8 @@ class Code < ApplicationRecord
     marcxml.leader
     marcxml.controlfield("001", Code.rismid)
     marcxml.datafield("041", "a", "Latin")
+    t, sh = make_standardTitle
+    df = marcxml.datafield("240", "a", t)
     marcxml.datafield("245", "a", make_titleOnSource)
     df = marcxml.datafield("260", "a", make_place)
     marcxml.addSubfield(df, "c", make_date)
@@ -29,19 +31,29 @@ class Code < ApplicationRecord
     df = marcxml.datafield("593", "a", make_type)
     marcxml.addSubfield(df, "8", 01)
 
-    # if no Piece in Code throw error
+    marcxml.datafield("650", "a", sh) unless sh.blank? # standardized
+    # Bibliographical reference
+    marcxml.datafield("691", "a", lit) unless lit.blank?
+
+    # if there is no Piece in Code throw an error
     ids, collection = make_content(Code.rismid, cs)
-    ids.each do |id|
-      df = marcxml.datafield("774", "w", id)
+    #if ids.empty?
+    #else
+    if ids.empty?
+      puts "Empty Code generated: ".red + cs.to_s
+    else 
+      ids.each do |id|
+        marcxml.datafield("774", "w", id)
+      end
     end
 
     df = marcxml.datafield("852", "a", "V-CVbav")
-    marcxml.addSubfield(df, "z", "Fondo Cappella Sistina")
     marcxml.addSubfield(df, "c", "CS " + cs.to_s)
     marcxml.addSubfield(df, "d", "lib " + libsig) unless libsig.blank?
     marcxml.addSubfield(df, "d", sig0) unless sig0.blank?
     marcxml.addSubfield(df, "d", sig1) unless sig1.blank?
     marcxml.addSubfield(df, "d", sig2) unless sig2.blank?
+    marcxml.addSubfield(df, "z", "Fondo Cappella Sistina")
 
     # if digitized add link to 856
     unless not digivatlib.include?(cs)
@@ -174,6 +186,172 @@ class Code < ApplicationRecord
     # use yaml-file to link german names to terms
     # use $650 where appropriate
     # maybe even $730
+    case t_
+    when ""
+      t = "Sacred songs"
+      sh = t
+    when "Alleluia", "Alleluja, Tractus", "Alleluja-Vers"
+      t = "Alleluia"
+      sh = "Sacred songs"
+    when "Antiphon",
+       "Antiphon (Motette)", 
+       "Antiphon und Proprium", 
+       "Antiphon zum Magnificat", 
+       "Antiphon, Alleluia", 
+       "Antiphon, Alleluja", 
+       "Antiphon-Motette", 
+       "Antiphon/Cantus?", 
+       "Antiphon/Responsorium?", 
+       "Antiphon/Tractus", 
+       "Antiphonen", 
+       "Antiphonen, Gebete", 
+       "Antiphonen, Psalmen", 
+       "Antiphonen, Psalmen, Lektionen", 
+       "Antiphonen, Psalmen, Lektionen, Responsorien", 
+       "Antiphonen, Psalmen, Responsorien, Lektionen", 
+       "Antiphonen, Psalmi, Lektionen, Responsorien", 
+       "Antiphonen, Vespern",
+       "Versikel-Antiphon",
+       "Vesperantiphonen", 
+       "Vesperantiphonen, Introitus"
+      t = "Antiphonies"
+      sh = t
+    when "Arie"
+      t = "Arias"
+      sh = "Arias (voc.)"
+    when "Canon?", "Kanon"
+      t = "Canons"
+      sh = "Canons (voc.)"
+    when "Cantus"
+      t = "Cantus choralis"
+      sh = t
+    when "Falsibordoni", 
+      "Falsobordone"
+      t = "Falsibordoni"
+      sh = "Falsi bordoni"
+    when "Gloria", 
+      "Gloria Patri"
+      t = "Gloria"
+      sh = t
+    when "Graduale"
+      t = "Graduale"
+      sh = "Gradual"
+    when "Graduale, Offertorium"
+      t = "Graduale et Offertorium"
+    when "Benedicamus", 
+      "Benedictus", 
+      "Canticum", 
+      "Communio", 
+      "Credo", 
+      "Kyrie", 
+      "Magnificat", 
+      "Pater noster", 
+      "Proprium", 
+      "Sanctus", 
+      t = t_
+      sh = "Sacred songs"
+    when "Hymnus",
+      "Hymnen", 
+      "Hymnus, nach Stäblein kein Hymnus, p. XVII Anm. 21"
+      t = "Hymns"
+      sh = t
+    when "Improperien", "Improperium"
+      t = "Imporperia"
+      sh = t
+    when "Introitus"
+      t = "Introits"
+      sh = "Sacred songs"
+    when "Invitatorium, Antiphonen, Responsorien", "Invitatorium, Psalm",
+      "Absolutionen", "Kapitel"
+      t = "Sacred songs"
+      sh = t
+    when "Kammerduett"
+      t = "Duets"
+      sh = "Duets"
+    when "Lamentation", 
+      "Lamentationen" 
+      t = "Lamentations"
+      sh = t
+    when "Lectio Epistolae", 
+      "Lectio IX sancti Evangelii", 
+      "Lektionen" 
+      t = "Lections"
+      sh = t
+    when "Litanei", 
+      "Litaneien"
+      t = "Litanies" 
+      sh = t
+    when "Madrigal", "Madrigale"
+      t = "Madrigals"
+      sh = t
+    when "Messe", "Meßordinarium", "Meßproprium",
+      "Messe", 
+      "Messe: Agnus Dei", 
+      "Messe: Credo", 
+      "Messe: Credo (Fragm.)", 
+      "Messe: Gloria", 
+      "Messe: Kyrie", 
+      "Messe: Kyrie, Gloria", 
+      "Messe: Sanctus"
+      t = "Masses"
+      sh = t
+    when "Madrigal"
+      t = "Madrigals"
+      sh = t
+    when "Motette",
+      "Laudenmotette",
+      "Litaneimotette",
+      "Passionsmotette",
+      "Psalm (Motette)",
+      "Psalmmotette",
+      "Sequenz-/Litaneimotette", 
+      "Sequenzmotette",
+      "Tractus-Motette" 
+      t = "Motets"
+      sh = t
+    when "Offertorium", "Offertorium / Responsorium",
+      t = "Offertories"
+      sh = t
+    when "Offizium", "Weihoffizium", "Totenoffizium"
+      t = "Sacred song"
+      sh = t
+      
+    when "Passion",
+      "Requiem"
+      t = t_
+      sh = t
+    when "Psalm", 
+      "Psalm - Responsorium", 
+      "Psalmen", 
+      "Psalmtexte"
+      t = "Psalm"
+      sh = t
+    when "Responsorien", 
+      "Responsorium", 
+      "Responsorium/Antiphon?", 
+      "15 Responsorien zur Passion"
+      t = "Responsories"
+      sh = t
+    when "Sequentia sancti evangelii", 
+      "Sequenz", 
+      "Sequenz, Antiphon"
+      t = "Sequences"
+      sh = t
+    when "Tractus", 
+      "Tractus und Alleluja"
+      t = "Tracts"
+      sh = t
+    when "Versus", 
+      "Versus ad salutandam crucem"
+      t = "Versi"
+      sh = t
+    else
+      t = "Sacred songs"          # if empty it gets an edit-request
+      sh = t_
+      # "XX" 
+    end
+    return t, sh
+   
   end
 
   def make_subjectHeading

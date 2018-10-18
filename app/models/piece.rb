@@ -14,6 +14,7 @@ class Piece < ApplicationRecord
 
 
   validates_presence_of :nr
+
   def build_xml(parent_record)
     Piece.instance_eval { @rismid += 1 }
     marcxml = FCS::Node.new
@@ -56,9 +57,10 @@ class Piece < ApplicationRecord
     marcxml.datafield("730", "a", title1) unless title1.blank?
     marcxml.datafield("730", "a", t_) unless t_.blank? # original subject heading
     marcxml.datafield("773", "w", parent_record)
+
     df = marcxml.datafield("852", "a", "V-CVbav")
-    marcxml.addSubfield(df, "z", "Fondo Cappella Sistina")
     marcxml.addSubfield(df, "c", "CS " + cs.to_s)
+    marcxml.addSubfield(df, "z", "Fondo Cappella Sistina")
     #marcxml.addSubfield(df, "d", "lib " + libsig) unless libsig.blank?
     #marcxml.addSubfield(df, "d", sig0) unless sig0.blank?
     #marcxml.addSubfield(df, "d", sig1) unless sig1.blank?

@@ -56,3 +56,6 @@ group :test do
   gem 'database_cleaner'
   gem 'json'
 end
+
+# I want colors!
+gem 'colorize'
