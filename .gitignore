@@ -28,8 +28,4 @@
 # Ignore tared import files
 *.tar.bz2
 
-# also ignore muscat
-# should be a submodule
-muscat
-
 export/samples/test.xml
