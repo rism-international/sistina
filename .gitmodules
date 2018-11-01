@@ -1,0 +1,3 @@
+[submodule "muscat"]
+	path = muscat
+	url = https://github.com/rism-ch/muscat.git
