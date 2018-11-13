@@ -1,7 +1,7 @@
 class Piece < ApplicationRecord
 #  has_many :concordances
 #  has_many :parts
-  offset = 600
+  offset = 85700600
   @rismid = offset 
 
   class << self
@@ -18,41 +18,42 @@ class Piece < ApplicationRecord
   def build_xml(parent_record)
     Piece.instance_eval { @rismid += 1 }
     marcxml = FCS::Node.new
-    marcxml.leader
+    marcxml.leader("ndd")
     marcxml.controlfield("001", Piece.rismid)
 
     # Parts with Textincipits
     p = Part.where(nr: nr)
     unless p.empty? 
       p.each do |i|
-        df = marcxml.datafield("031", "a", make_workNumber(i))
-        marcxml.addSubfield(df, "b", i.part_nr)
-        # Although there are pieces with parts, that are devided into movements,
-        # the differentiation is not clear enough to have them numbered
-        # and with their own incipit
-        marcxml.addSubfield(df, "c", 1)
-        marcxml.addSubfield(df, "t", make_textIncipit(i)) unless make_textIncipit(i).blank?
-        marcxml.addSubfield(df, "m", make_scoring(i)) unless make_scoring(i).blank?
-        # add language!
+        if ( not make_textIncipit(i).blank? and not make_scoring(i).blank? )
+          df = marcxml.datafield("031", "a", make_workNumber(i))
+          marcxml.addSubfield(df, "b", i.part_nr)
+          # Although there are pieces with parts, that are devided into movements,
+          # the differentiation is not clear enough to have them numbered
+          # and with their own incipit
+          marcxml.addSubfield(df, "c", 1)
+          marcxml.addSubfield(df, "t", make_textIncipit(i)) unless make_textIncipit(i).blank?
+          marcxml.addSubfield(df, "m", make_scoring(i)) unless make_scoring(i).blank?
+          # add language!
+        end
       end
     end
 
 
-    marcxml.datafield("100", "a", composer0) unless composer0.blank?
+    composer0.blank? ?  marcxml.datafield("100", "a", "Anonymus") : marcxml.datafield("100", "a", composer0)
     # standardized title
-    t, sh = make_title
-    df = marcxml.datafield("240", "a", t)
+    tit, shelfm = make_title
+    df = marcxml.datafield("240", "a", tit)
     marcxml.addSubfield(df, "m", make_totalScoring)
     # title on source
     marcxml.datafield("245", "a", make_titleOnSource)
 #    marcxml.datafield("246", "a", title1) # variant title on source
-    # Subject heading
-    marcxml.datafield("650", "a", sh) unless sh.blank? # standardized
-    # Liturgical festival
-    l = make_litFeast
-    marcxml.datafield("657", "a", l) unless l.blank?
     # Bibliographical reference
-    marcxml.datafield("691", "a", lit) unless lit.blank?
+    marcxml.datafield("500", "a", lit) unless lit.blank?
+    # Subject heading
+    marcxml.datafield("650", "a", shelfm) unless shelfm.blank? # standardized
+    # Liturgical festival
+    marcxml.datafield("657", "a", make_litFeast) unless make_litFeast.blank?
     # additional title
     marcxml.datafield("730", "a", title1) unless title1.blank?
     marcxml.datafield("730", "a", t_) unless t_.blank? # original subject heading
@@ -61,10 +62,6 @@ class Piece < ApplicationRecord
     df = marcxml.datafield("852", "a", "V-CVbav")
     marcxml.addSubfield(df, "c", "CS " + cs.to_s)
     marcxml.addSubfield(df, "z", "Fondo Cappella Sistina")
-    #marcxml.addSubfield(df, "d", "lib " + libsig) unless libsig.blank?
-    #marcxml.addSubfield(df, "d", sig0) unless sig0.blank?
-    #marcxml.addSubfield(df, "d", sig1) unless sig1.blank?
-    #marcxml.addSubfield(df, "d", sig2) unless sig2.blank?
     # marcxml.datafield("594", "b", @partsVoicings) unless @partsVoicings.blank?
     #
     return Piece.rismid, marcxml.document

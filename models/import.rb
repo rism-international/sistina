@@ -17,7 +17,7 @@ module FCS    # Fondo Capella Sistina
     end
 
     def pieces_uri
-      URI('http://localhost:3000/pieces')
+      URI('http://localhost:3010/pieces')
     end
 
     def load_pieces
@@ -55,7 +55,7 @@ module FCS    # Fondo Capella Sistina
     end
 
     def parts_uri
-      URI('http://localhost:3000/parts')
+      URI('http://localhost:3010/parts')
     end
 
     def load_parts
@@ -82,7 +82,7 @@ module FCS    # Fondo Capella Sistina
     end
 
     def codes_uri
-      URI('http://localhost:3000/codes')
+      URI('http://localhost:3010/codes')
     end
 
     def get_codes
@@ -144,7 +144,7 @@ module FCS    # Fondo Capella Sistina
     end
 
     def concordances_uri
-      URI('http://localhost:3000/concordances')
+      URI('http://localhost:3010/concordances')
     end
 
     def get_concordances
@@ -174,7 +174,7 @@ module FCS    # Fondo Capella Sistina
     end
 
     def units_uri
-      URI('http://localhost:3000/units')
+      URI('http://localhost:3010/units')
     end
 
     def load_units

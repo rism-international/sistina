@@ -31,16 +31,16 @@ module FCS      # Fondo Capella Sistina
       return tag
     end
     
-    def addSubfield(node, code, content)
-      sf = Nokogiri::XML::Node.new "subfield", node
+    def addSubfield(datafield, code, content)
+      sf = Nokogiri::XML::Node.new "subfield", datafield
       sf['code'] = code
       sf.content = content
-      @node << sf
+      datafield << sf
     end
 
-    def leader
+    def leader(template="ncc")
       tag = Nokogiri::XML::Node.new "leader", node
-      tag.content = "00000ncc a2200000 u 4500" # Has to be checked again!!!
+      tag.content = "00000#{template} a2200000 u 4500" # Has to be checked again!!!
       @node << tag
     end
   end

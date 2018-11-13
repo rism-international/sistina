@@ -3,7 +3,7 @@ class Code < ApplicationRecord
   has_many :pieces
   has_many :units
   validates_presence_of :cs
-  offset = 0
+  offset = 85700001
   @rismid = offset
 
   class << self
@@ -19,24 +19,32 @@ class Code < ApplicationRecord
     marcxml = FCS::Node.new
     marcxml.leader
     marcxml.controlfield("001", Code.rismid)
-    marcxml.datafield("041", "a", "Latin")
-    t, sh = make_standardTitle
-    df = marcxml.datafield("240", "a", t)
+    marcxml.datafield("041", "a", "lat")
+    tit, shelf, cmpsr = make_standardTitle
+    marcxml.datafield("100", "a", cmpsr) unless cmpsr.blank?
+    marcxml.datafield("130", "a", tit) # Einordnungstitel
     marcxml.datafield("245", "a", make_titleOnSource)
     df = marcxml.datafield("260", "a", make_place)
     marcxml.addSubfield(df, "c", make_date)
-    marcxml.addSubfield(df, "8", 01)
-    # to Supplementary Material (525 $a)
+    marcxml.addSubfield(df, "8", "01")
+
+    # Physical description
+    # Dimensions
+    marcxml.datafield("300", "c", size)
+
+    # Bibliographical reference
+    marcxml.datafield("500", "a", lit) unless lit.blank?
+
+    # Many of the codes have a supplemented page
+    # documenting the restauration
     marcxml.datafield("525", "a", @supplement) unless @supplement.blank?
     df = marcxml.datafield("593", "a", make_type)
-    marcxml.addSubfield(df, "8", 01)
+    marcxml.addSubfield(df, "8", "01")
 
-    marcxml.datafield("650", "a", sh) unless sh.blank? # standardized
-    # Bibliographical reference
-    marcxml.datafield("691", "a", lit) unless lit.blank?
+    marcxml.datafield("650", "a", shelf) unless shelf.blank? # standardized
 
     # if there is no Piece in Code throw an error
-    ids, collection = make_content(Code.rismid, cs)
+    ids, collection = make_include(Code.rismid, cs)
     #if ids.empty?
     #else
     if ids.empty?
@@ -60,29 +68,29 @@ class Code < ApplicationRecord
       df = marcxml.datafield(
         "856", "u", "https://digi.vatlib.it/view/MSS_Capp.Sist." + cs.to_s
       ) 
+      marcxml.addSubfield(df, "x", "Digitalization")
       marcxml.addSubfield(df, "z", "Digitalisat")
     end
     return marcxml, collection
   end
 
-  def make_content(rismid, cs)
+  def make_include(rismid, cs)
     # for all the picese
-    # export cs to a global variable
-    # or as an argument to Piece.build_xml($cs)
+    # export cs as an argument to Piece.build_xml($cs)
     # call Piece.build_xml
     # and add them to $774
-    # returns array of pieces ids
+    # returns array of pieces ids and the pieces xml
     ids = []
-    content = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+    includes = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
       xml.content('xmlns' => "http://www.loc.gov/MARC21/slim") do
       end
     end
     Piece.where(cs: cs).each do |p|
       id, marc = p.build_xml(rismid)
-      content.doc.root << marc.doc.children.first
+      includes.doc.root << marc.doc.children.first
       ids << id 
     end
-    return ids, content
+    return ids, includes
   end
 
   def make_type
@@ -186,58 +194,41 @@ class Code < ApplicationRecord
     # use yaml-file to link german names to terms
     # use $650 where appropriate
     # maybe even $730
-    case t_
+    # Code.where("content LIKE ?", '%:%').pluck(:content)
+    if content.match(/:/)
+      composer, ttl = content.split(':')
+      ttl = ttl.strip
+    else
+      ttl = content
+    end
+    case ttl
     when ""
       t = "Sacred songs"
       sh = t
-    when "Alleluia", "Alleluja, Tractus", "Alleluja-Vers"
+    when /Alle/
       t = "Alleluia"
       sh = "Sacred songs"
-    when "Antiphon",
-       "Antiphon (Motette)", 
-       "Antiphon und Proprium", 
-       "Antiphon zum Magnificat", 
-       "Antiphon, Alleluia", 
-       "Antiphon, Alleluja", 
-       "Antiphon-Motette", 
-       "Antiphon/Cantus?", 
-       "Antiphon/Responsorium?", 
-       "Antiphon/Tractus", 
-       "Antiphonen", 
-       "Antiphonen, Gebete", 
-       "Antiphonen, Psalmen", 
-       "Antiphonen, Psalmen, Lektionen", 
-       "Antiphonen, Psalmen, Lektionen, Responsorien", 
-       "Antiphonen, Psalmen, Responsorien, Lektionen", 
-       "Antiphonen, Psalmi, Lektionen, Responsorien", 
-       "Antiphonen, Vespern",
-       "Versikel-Antiphon",
-       "Vesperantiphonen", 
-       "Vesperantiphonen, Introitus"
-      t = "Antiphonies"
+    when /ntiphon/
+     t = "Antiphonies"
       sh = t
-    when "Arie"
+    when /Ari/
       t = "Arias"
       sh = "Arias (voc.)"
-    when "Canon?", "Kanon"
+    when /anon/
       t = "Canons"
       sh = "Canons (voc.)"
-    when "Cantus"
+    when /Cantus/
       t = "Cantus choralis"
       sh = t
-    when "Falsibordoni", 
-      "Falsobordone"
+    when /Falsibordon/
       t = "Falsibordoni"
       sh = "Falsi bordoni"
-    when "Gloria", 
-      "Gloria Patri"
+    when /Gloria/
       t = "Gloria"
       sh = t
-    when "Graduale"
+    when /Graduale/
       t = "Graduale"
       sh = "Gradual"
-    when "Graduale, Offertorium"
-      t = "Graduale et Offertorium"
     when "Benedicamus", 
       "Benedictus", 
       "Canticum", 
@@ -247,111 +238,73 @@ class Code < ApplicationRecord
       "Magnificat", 
       "Pater noster", 
       "Proprium", 
-      "Sanctus", 
-      t = t_
+      "Sanctus"
+      t = ttl
       sh = "Sacred songs"
-    when "Hymnus",
-      "Hymnen", 
-      "Hymnus, nach Stäblein kein Hymnus, p. XVII Anm. 21"
+    when /Hymn/
       t = "Hymns"
       sh = t
-    when "Improperien", "Improperium"
+    when /Imprope/
       t = "Imporperia"
       sh = t
-    when "Introitus"
+    when /Introitus/
       t = "Introits"
       sh = "Sacred songs"
-    when "Invitatorium, Antiphonen, Responsorien", "Invitatorium, Psalm",
-      "Absolutionen", "Kapitel"
+    when /Invitatorium/
       t = "Sacred songs"
       sh = t
-    when "Kammerduett"
-      t = "Duets"
-      sh = "Duets"
-    when "Lamentation", 
-      "Lamentationen" 
+    when /Lamentation/
       t = "Lamentations"
       sh = t
-    when "Lectio Epistolae", 
-      "Lectio IX sancti Evangelii", 
-      "Lektionen" 
+    when /Le[c,k]tio/
       t = "Lections"
       sh = t
-    when "Litanei", 
-      "Litaneien"
+    when /Litanei/
       t = "Litanies" 
       sh = t
-    when "Madrigal", "Madrigale"
+    when /Madrigal/
       t = "Madrigals"
       sh = t
-    when "Messe", "Meßordinarium", "Meßproprium",
-      "Messe", 
-      "Messe: Agnus Dei", 
-      "Messe: Credo", 
-      "Messe: Credo (Fragm.)", 
-      "Messe: Gloria", 
-      "Messe: Kyrie", 
-      "Messe: Kyrie, Gloria", 
-      "Messe: Sanctus"
+    when /Me[s,ß]/
       t = "Masses"
       sh = t
     when "Madrigal"
       t = "Madrigals"
       sh = t
-    when "Motette",
-      "Laudenmotette",
-      "Litaneimotette",
-      "Passionsmotette",
-      "Psalm (Motette)",
-      "Psalmmotette",
-      "Sequenz-/Litaneimotette", 
-      "Sequenzmotette",
-      "Tractus-Motette" 
+    when /otett/
       t = "Motets"
       sh = t
-    when "Offertorium", "Offertorium / Responsorium",
+    when /Offertorium/
       t = "Offertories"
       sh = t
-    when "Offizium", "Weihoffizium", "Totenoffizium"
+    when /ffizium/
       t = "Sacred song"
       sh = t
-      
-    when "Passion",
-      "Requiem"
-      t = t_
+    when /Passion/,
+      /Requiem/
+      t = ttl
       sh = t
-    when "Psalm", 
-      "Psalm - Responsorium", 
-      "Psalmen", 
-      "Psalmtexte"
+    when /Psalm/
       t = "Psalm"
       sh = t
-    when "Responsorien", 
-      "Responsorium", 
-      "Responsorium/Antiphon?", 
-      "15 Responsorien zur Passion"
+    when /Responsori/
       t = "Responsories"
       sh = t
-    when "Sequentia sancti evangelii", 
-      "Sequenz", 
-      "Sequenz, Antiphon"
+    when /Sequen/
       t = "Sequences"
       sh = t
-    when "Tractus", 
-      "Tractus und Alleluja"
+    when /Tractus/
       t = "Tracts"
       sh = t
-    when "Versus", 
-      "Versus ad salutandam crucem"
+    when /Versus/
       t = "Versi"
       sh = t
     else
       t = "Sacred songs"          # if empty it gets an edit-request
-      sh = t_
+      sh = ttl
       # "XX" 
     end
-    return t, sh
-   
+    return t, sh, composer
   end
 
   def make_subjectHeading
@@ -383,6 +336,7 @@ class Code < ApplicationRecord
   end
   
   def self.sample
-    return Code.where(cs: 63)
+    #return Code.where(cs: 63)
+    return Code.where("content LIKE ?", '%:%')
   end
 end
