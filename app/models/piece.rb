@@ -47,15 +47,26 @@ class Piece < ApplicationRecord
     marcxml.addSubfield(df, "m", make_totalScoring)
     # title on source
     marcxml.datafield("245", "a", make_titleOnSource)
-#    marcxml.datafield("246", "a", title1) # variant title on source
+    marcxml.datafield("300", "a", "f. " << pages) unless pages.blank?
     # Bibliographical reference
-    marcxml.datafield("500", "a", lit) unless lit.blank?
+    df = marcxml.datafield("500", "a", lit) unless lit.blank?
+    # Reference note
+    marcxml.addSubfield(df, "a", non0.gsub(/\v/, '')) unless non0.blank?
+    # Comments
+    marcxml.addSubfield(df, "a", non1.gsub(/\v/, '')) unless non1.blank?
+    marcxml.addSubfield(df, "a", non2.gsub(/\v/, '')) unless non2.blank?
+    marcxml.addSubfield(df, "a", title.gsub(/\v/, '')) unless title.blank?
+    marcxml.addSubfield(df, "a", title2.gsub(/\v/, '')) unless title2.blank?
+    marcxml.addSubfield(df, "a", non4.gsub(/\v/, '')) unless non4.blank?
+    # Additional Names
+    marcxml.addSubfield(df, "a", composer.gsub(/\v/, '')) unless composer.blank?
     # Subject heading
     marcxml.datafield("650", "a", shelfm) unless shelfm.blank? # standardized
     # Liturgical festival
     marcxml.datafield("657", "a", make_litFeast) unless make_litFeast.blank?
     # additional title
     marcxml.datafield("730", "a", title1) unless title1.blank?
+    marcxml.datafield("730", "a", title0) unless title1.blank?
     marcxml.datafield("730", "a", t_) unless t_.blank? # original subject heading
     marcxml.datafield("773", "w", parent_record)
 
@@ -77,54 +88,58 @@ class Piece < ApplicationRecord
   end
 
   def make_title
-    case t_
-    when "Alleluia", "Alleluja, Tractus", "Alleluja-Vers"
+    tmp = t_
+    case tmp
+    when ""
+      t = "[edit]"
+      sh = "Sacred songs"
+    #when "Alleluia", "Alleluja, Tractus", "Alleluja-Vers"
+    when /Allelu/
       t = "Alleluia"
       sh = "Sacred songs"
-    when "Antiphon",
-       "Antiphon (Motette)", 
-       "Antiphon und Proprium", 
-       "Antiphon zum Magnificat", 
-       "Antiphon, Alleluia", 
-       "Antiphon, Alleluja", 
-       "Antiphon-Motette", 
-       "Antiphon/Cantus?", 
-       "Antiphon/Responsorium?", 
-       "Antiphon/Tractus", 
-       "Antiphonen", 
-       "Antiphonen, Gebete", 
-       "Antiphonen, Psalmen", 
-       "Antiphonen, Psalmen, Lektionen", 
-       "Antiphonen, Psalmen, Lektionen, Responsorien", 
-       "Antiphonen, Psalmen, Responsorien, Lektionen", 
-       "Antiphonen, Psalmi, Lektionen, Responsorien", 
-       "Antiphonen, Vespern",
-       "Versikel-Antiphon",
-       "Vesperantiphonen", 
-       "Vesperantiphonen, Introitus"
-      t = "Antiphonies"
+#    when "Antiphon",
+#       "Antiphon (Motette)", 
+#       "Antiphon und Proprium", 
+#       "Antiphon zum Magnificat", 
+#       "Antiphon, Alleluia", 
+#       "Antiphon, Alleluja", 
+#       "Antiphon-Motette", 
+#       "Antiphon/Cantus?", 
+#       "Antiphon/Responsorium?", 
+#       "Antiphon/Tractus", 
+#       "Antiphonen", 
+#       "Antiphonen, Gebete", 
+#       "Antiphonen, Psalmen", 
+#       "Antiphonen, Psalmen, Lektionen", 
+#       "Antiphonen, Psalmen, Lektionen, Responsorien", 
+#       "Antiphonen, Psalmen, Responsorien, Lektionen", 
+#       "Antiphonen, Psalmi, Lektionen, Responsorien", 
+#       "Antiphonen, Vespern",
+#       "Versikel-Antiphon",
+#       "Vesperantiphonen", 
+#       "Vesperantiphonen, Introitus"
+    when /Antiphon/
+      t = "Antiphones"
       sh = t
-    when "Arie"
+    when /Arie/
       t = "Arias"
       sh = "Arias (voc.)"
-    when "Canon?", "Kanon"
+    when /anon/
       t = "Canons"
       sh = "Canons (voc.)"
-    when "Cantus"
+    when /Cantus/
       t = "Cantus choralis"
       sh = t
-    when "Falsibordoni", 
-      "Falsobordone"
+    when /Fals[i,o]bordon/
       t = "Falsibordoni"
       sh = "Falsi bordoni"
-    when "Gloria", 
-      "Gloria Patri"
+    when /Gloria/ 
       t = "Gloria"
       sh = t
-    when "Graduale"
+    when /Graduale/
       t = "Graduale"
       sh = "Gradual"
-    when "Graduale, Offertorium"
+    when /Graduale, Offertorium/
       t = "Graduale et Offertorium"
     when "Benedicamus", 
       "Benedictus", 
@@ -135,102 +150,88 @@ class Piece < ApplicationRecord
       "Magnificat", 
       "Pater noster", 
       "Proprium", 
-      "Sanctus", 
-      t = t_
+      "Sanctus" 
+      t = tmp
       sh = "Sacred songs"
-    when "Hymnus",
-      "Hymnen", 
-      "Hymnus, nach Stäblein kein Hymnus, p. XVII Anm. 21"
+    when /Hymn/
       t = "Hymns"
       sh = t
-    when "Improperien", "Improperium"
+    when /Improperi/
       t = "Imporperia"
       sh = t
-    when "Introitus"
+    when /Introitus/
       t = "Introits"
       sh = "Sacred songs"
-    when "Invitatorium, Antiphonen, Responsorien", "Invitatorium, Psalm",
-      "Absolutionen", "Kapitel"
-      t = "Sacred songs"
-      sh = t
-    when "Kammerduett"
+#    when "Invitatorium, Antiphonen, Responsorien", "Invitatorium, Psalm",
+#      "Absolutionen", "Kapitel"
+#      t = "Sacred songs"
+#      sh = t
+    when /Kammerduett/
       t = "Duets"
       sh = "Duets"
-    when "Lamentation", 
-      "Lamentationen" 
+    when /Lamentation/
       t = "Lamentations"
       sh = t
-    when "Lectio Epistolae", 
-      "Lectio IX sancti Evangelii", 
-      "Lektionen" 
+    when /Lectio/
       t = "Lections"
       sh = t
-    when "Litanei", 
-      "Litaneien"
+    when /Litanei/
       t = "Litanies" 
       sh = t
-    when "Madrigal", "Madrigale"
+    when /Madrigal/
       t = "Madrigals"
       sh = t
-    when "Messe", "Meßordinarium", "Meßproprium",
-      "Messe", 
-      "Messe: Agnus Dei", 
-      "Messe: Credo", 
-      "Messe: Credo (Fragm.)", 
-      "Messe: Gloria", 
-      "Messe: Kyrie", 
-      "Messe: Kyrie, Gloria", 
-      "Messe: Sanctus"
+    when /Me[s,ß]/
+#      "Messe", 
+#      "Messe: Agnus Dei", 
+#      "Messe: Credo", 
+#      "Messe: Credo (Fragm.)", 
+#      "Messe: Gloria", 
+#      "Messe: Kyrie", 
+#      "Messe: Kyrie, Gloria", 
+#      "Messe: Sanctus"
       t = "Masses"
       sh = t
-    when "Madrigal"
+    when /Madrigal/
       t = "Madrigals"
       sh = t
-    when "Motette",
-      "Laudenmotette",
-      "Litaneimotette",
-      "Passionsmotette",
-      "Psalm (Motette)",
-      "Psalmmotette",
-      "Sequenz-/Litaneimotette", 
-      "Sequenzmotette",
-      "Tractus-Motette" 
-      t = "Motets"
-      sh = t
-    when "Offertorium", "Offertorium / Responsorium",
+    when /otette/
+#      "Laudenmotette",
+#      "Litaneimotette",
+#      "Passionsmotette",
+#      "Psalm (Motette)",
+#      "Psalmmotette",
+#      "Sequenz-/Litaneimotette", 
+#      "Sequenzmotette",
+#      "Tractus-Motette" 
+      t = title1
+      sh = "Motets"
+    when /Offertori/
       t = "Offertories"
       sh = t
-    when "Offizium", "Weihoffizium", "Totenoffizium"
+    when /ffizium/, "Weihoffizium", "Totenoffizium"
       t = "Sacred song"
       sh = t
       
-    when "Passion",
-      "Requiem"
-      t = t_
+    when /Passion/
+      t = tmp
       sh = t
-    when "Psalm", 
-      "Psalm - Responsorium", 
-      "Psalmen", 
-      "Psalmtexte"
+    when /Requiem/
+      t = tmp
+      sh = t
+    when /Psalm/ 
       t = "Psalm"
       sh = t
-    when "Responsorien", 
-      "Responsorium", 
-      "Responsorium/Antiphon?", 
-      "15 Responsorien zur Passion"
+    when /Responsori/
       t = "Responsories"
       sh = t
-    when "Sequentia sancti evangelii", 
-      "Sequenz", 
-      "Sequenz, Antiphon"
+    when /Sequen/
       t = "Sequences"
       sh = t
-    when "Tractus", 
-      "Tractus und Alleluja"
+    when /Tractus/
       t = "Tracts"
       sh = t
-    when "Versus", 
-      "Versus ad salutandam crucem"
+    when /Versus/
       t = "Versi"
       sh = t
     else

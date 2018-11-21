@@ -30,10 +30,33 @@ class Code < ApplicationRecord
 
     # Physical description
     # Dimensions
-    marcxml.datafield("300", "c", size)
+    df = marcxml.datafield("300", "a", make_format)
+    marcxml.addSubfield(df, "b", material.gsub( /\v/, '')) unless material.blank?
+    marcxml.addSubfield(df, "c", size)
+    marcxml.addSubfield(df, "8", 01)
 
     # Bibliographical reference
-    marcxml.datafield("500", "a", lit) unless lit.blank?
+    df = marcxml.datafield("500", "a", lit) unless lit.blank?
+    marcxml.addSubfield(df, "a", notation) unless notation.blank?
+    # Comments
+    marcxml.addSubfield(df, "a", comment1.gsub( /\v/, '')) unless comment1.blank?
+    marcxml.addSubfield(df, "a", non7.gsub( /\v/, '')) unless non7.blank?
+    marcxml.addSubfield(df, "a", title_comment.gsub( /\v/, '').force_encoding("utf-8")) unless title_comment.blank?
+    marcxml.addSubfield(df, "a", binding_comment.gsub( /\v/, '')) unless binding_comment.blank?
+    marcxml.addSubfield(df, "a", pagenumbering.gsub( /\v/, '')) unless pagenumbering.blank?
+    marcxml.addSubfield(df, "a", non0.gsub( /\v/, '')) unless non0.blank?
+    marcxml.addSubfield(df, "a", non4.gsub( /\v/, '')) unless non4.blank?
+    marcxml.addSubfield(df, "a", comment0.gsub( /\v/, '')) unless comment0.blank?
+    marcxml.addSubfield(df, "a", non1.gsub( /\v/, '')) unless non1.blank?
+    marcxml.addSubfield(df, "a", non2.gsub( /\v/, '')) unless non2.blank?
+    marcxml.addSubfield(df, "a", non11.gsub( /\v/, '')) unless non11.blank?
+    marcxml.addSubfield(df, "a", non3.gsub( /\v/, '')) unless non3.blank?
+    marcxml.addSubfield(df, "a", non12.gsub( /\v/, '')) unless non12.blank?
+    marcxml.addSubfield(df, "a", non13.gsub( /\v/, '')) unless non13.blank?
+    marcxml.addSubfield(df, "a", comment2.gsub( /\v/, '')) unless comment2.blank?
+    marcxml.addSubfield(df, "a", non7.gsub( /\v/, '')) unless non7.blank?
+    marcxml.addSubfield(df, "a", non14.gsub( /\v/, '')) unless non14.blank?
+    marcxml.addSubfield(df, "a", comment3.gsub( /\v/, '')) unless comment3.blank?
 
     # Many of the codes have a supplemented page
     # documenting the restauration
@@ -41,7 +64,8 @@ class Code < ApplicationRecord
     df = marcxml.datafield("593", "a", make_type)
     marcxml.addSubfield(df, "8", "01")
 
-    marcxml.datafield("650", "a", shelf) unless shelf.blank? # standardized
+    marcxml.datafield("650", "a", shelf) unless shelf.blank?
+    marcxml.datafield("710", "a", place) unless place.blank?
 
     # if there is no Piece in Code throw an error
     ids, collection = make_include(Code.rismid, cs)
@@ -72,6 +96,15 @@ class Code < ApplicationRecord
       marcxml.addSubfield(df, "z", "Digitalisat")
     end
     return marcxml, collection
+  end
+
+  def make_format
+    if /Chorbuch/.match(t_)
+      f = "1 choirbook: " << n_ << "f."
+    else
+      f = "1 score: " << n_ << "f."
+    end
+    return f
   end
 
   def make_include(rismid, cs)
@@ -209,7 +242,7 @@ class Code < ApplicationRecord
       t = "Alleluia"
       sh = "Sacred songs"
     when /ntiphon/
-     t = "Antiphonies"
+     t = "Antiphones"
       sh = t
     when /Ari/
       t = "Arias"
@@ -316,7 +349,7 @@ class Code < ApplicationRecord
 
   def self.export
 
-    outfile = File.new("#{Rails.root}/export/samples/test.xml", "w")
+    outfile = File.new("#{Rails.root}/export/export.xml", "w")
 
     collection = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
       xml.collection('xmlns' => "http://www.loc.gov/MARC21/slim") do
@@ -330,7 +363,6 @@ class Code < ApplicationRecord
       collection.doc.root << marc.document.doc.children.first
 #      collection.doc.root << marc.node
       collection.doc.root << pieces.doc.children.first
-#      binding.pry
     end
     outfile.write(collection.doc.to_xml)
   end
