@@ -1,17 +1,12 @@
 class Piece < ApplicationRecord
 #  has_many :concordances
 #  has_many :parts
-  offset = 85700600
+  offset = 85701000
   @rismid = offset 
 
   class << self
     attr_reader :rismid
   end
-
-#  def initialize
-#    Piece.instance_eval { @rismid += 1 }
-#  end
-
 
   validates_presence_of :nr
 
@@ -25,20 +20,21 @@ class Piece < ApplicationRecord
     p = Part.where(nr: nr)
     unless p.empty? 
       p.each do |i|
-        if ( not make_textIncipit(i).blank? and not make_scoring(i).blank? )
+        if ( not make_textIncipit(i).blank? or not make_scoring(i).blank? )
           df = marcxml.datafield("031", "a", make_workNumber(i))
           marcxml.addSubfield(df, "b", i.part_nr)
           # Although there are pieces with parts, that are devided into movements,
           # the differentiation is not clear enough to have them numbered
           # and with their own incipit
           marcxml.addSubfield(df, "c", 1)
+          marcxml.addSubfield(df, "d", i.title) unless i.title.blank?
           marcxml.addSubfield(df, "t", make_textIncipit(i)) unless make_textIncipit(i).blank?
           marcxml.addSubfield(df, "m", make_scoring(i)) unless make_scoring(i).blank?
-          # add language!
+          marcxml.addSubfield(df, "q", "composed by " << i.composer) unless i.composer.blank?
+          marcxml.addSubfield(df, "q", i.comment.gsub(/\v/, '')) unless i.comment.blank?
         end
       end
     end
-
 
     composer0.blank? ?  marcxml.datafield("100", "a", "Anonymus") : marcxml.datafield("100", "a", composer0)
     # standardized title
@@ -47,7 +43,8 @@ class Piece < ApplicationRecord
     marcxml.addSubfield(df, "m", make_totalScoring)
     # title on source
     marcxml.datafield("245", "a", make_titleOnSource)
-    marcxml.datafield("300", "a", "f. " << pages) unless pages.blank?
+    df = marcxml.datafield("300", "a", "f. " << pages) unless pages.blank?
+    marcxml.addSubfield(df, "8", "01") unless pages.blank?
     # Bibliographical reference
     df = marcxml.datafield("500", "a", lit) unless lit.blank?
     # Reference note
@@ -58,13 +55,25 @@ class Piece < ApplicationRecord
     marcxml.addSubfield(df, "a", title.gsub(/\v/, '')) unless title.blank?
     marcxml.addSubfield(df, "a", title2.gsub(/\v/, '')) unless title2.blank?
     marcxml.addSubfield(df, "a", non4.gsub(/\v/, '')) unless non4.blank?
+    # Concordances
+    c = Concordance.where(nr: nr)
+    unless c.empty? 
+      c.each do |i|
+        marcxml.addSubfield(df, "a", i.ccd0) unless i.ccd0.blank?
+        marcxml.addSubfield(df, "a", i.ccd1) unless i.ccd1.blank?
+        marcxml.addSubfield(df, "a", i.ccd2) unless i.ccd2.blank?
+        marcxml.addSubfield(df, "a", i.comment.gsub(/\v/, '')) unless i.comment.blank?
+        marcxml.addSubfield(df, "a", i.composer) unless i.composer.blank?
+        marcxml.addSubfield(df, "a", i.title) unless i.title.blank?
+      end
+    end
     # Additional Names
     marcxml.addSubfield(df, "a", composer.gsub(/\v/, '')) unless composer.blank?
     # Subject heading
     marcxml.datafield("650", "a", shelfm) unless shelfm.blank? # standardized
     # Liturgical festival
     marcxml.datafield("657", "a", make_litFeast) unless make_litFeast.blank?
-    # additional title
+  # additional title
     marcxml.datafield("730", "a", title1) unless title1.blank?
     marcxml.datafield("730", "a", title0) unless title1.blank?
     marcxml.datafield("730", "a", t_) unless t_.blank? # original subject heading
@@ -93,31 +102,9 @@ class Piece < ApplicationRecord
     when ""
       t = "[edit]"
       sh = "Sacred songs"
-    #when "Alleluia", "Alleluja, Tractus", "Alleluja-Vers"
     when /Allelu/
       t = "Alleluia"
       sh = "Sacred songs"
-#    when "Antiphon",
-#       "Antiphon (Motette)", 
-#       "Antiphon und Proprium", 
-#       "Antiphon zum Magnificat", 
-#       "Antiphon, Alleluia", 
-#       "Antiphon, Alleluja", 
-#       "Antiphon-Motette", 
-#       "Antiphon/Cantus?", 
-#       "Antiphon/Responsorium?", 
-#       "Antiphon/Tractus", 
-#       "Antiphonen", 
-#       "Antiphonen, Gebete", 
-#       "Antiphonen, Psalmen", 
-#       "Antiphonen, Psalmen, Lektionen", 
-#       "Antiphonen, Psalmen, Lektionen, Responsorien", 
-#       "Antiphonen, Psalmen, Responsorien, Lektionen", 
-#       "Antiphonen, Psalmi, Lektionen, Responsorien", 
-#       "Antiphonen, Vespern",
-#       "Versikel-Antiphon",
-#       "Vesperantiphonen", 
-#       "Vesperantiphonen, Introitus"
     when /Antiphon/
       t = "Antiphones"
       sh = t
@@ -162,10 +149,6 @@ class Piece < ApplicationRecord
     when /Introitus/
       t = "Introits"
       sh = "Sacred songs"
-#    when "Invitatorium, Antiphonen, Responsorien", "Invitatorium, Psalm",
-#      "Absolutionen", "Kapitel"
-#      t = "Sacred songs"
-#      sh = t
     when /Kammerduett/
       t = "Duets"
       sh = "Duets"
@@ -182,28 +165,12 @@ class Piece < ApplicationRecord
       t = "Madrigals"
       sh = t
     when /Me[s,ß]/
-#      "Messe", 
-#      "Messe: Agnus Dei", 
-#      "Messe: Credo", 
-#      "Messe: Credo (Fragm.)", 
-#      "Messe: Gloria", 
-#      "Messe: Kyrie", 
-#      "Messe: Kyrie, Gloria", 
-#      "Messe: Sanctus"
       t = "Masses"
       sh = t
     when /Madrigal/
       t = "Madrigals"
       sh = t
     when /otette/
-#      "Laudenmotette",
-#      "Litaneimotette",
-#      "Passionsmotette",
-#      "Psalm (Motette)",
-#      "Psalmmotette",
-#      "Sequenz-/Litaneimotette", 
-#      "Sequenzmotette",
-#      "Tractus-Motette" 
       t = title1
       sh = "Motets"
     when /Offertori/
@@ -212,7 +179,6 @@ class Piece < ApplicationRecord
     when /ffizium/, "Weihoffizium", "Totenoffizium"
       t = "Sacred song"
       sh = t
-      
     when /Passion/
       t = tmp
       sh = t

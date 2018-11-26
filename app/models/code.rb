@@ -57,6 +57,33 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "a", non7.gsub( /\v/, '')) unless non7.blank?
     marcxml.addSubfield(df, "a", non14.gsub( /\v/, '')) unless non14.blank?
     marcxml.addSubfield(df, "a", comment3.gsub( /\v/, '')) unless comment3.blank?
+    marcxml.addSubfield(df, "a", place) unless place.blank?
+    u = Unit.where(cs: cs)
+    unless u.empty?
+      u.each do |i|
+        marcxml.addSubfield(df, "a", "eigenst. Einh. " << i.pages) unless i.pages.blank?
+        marcxml.addSubfield(df, "a", i.comment1) unless i.comment1.blank?
+        marcxml.addSubfield(df, "a", i.comment0) unless i.comment0.blank?
+        marcxml.addSubfield(df, "a", i.material) unless i.material.blank?
+        marcxml.addSubfield(df, "a", i.t_) unless i.t_.blank?
+        marcxml.addSubfield(df, "a", i.comment2.gsub(/\v/, '')) unless i.comment2.blank?
+        marcxml.addSubfield(df, "a", i.comment3.gsub(/\v/, '')) unless i.comment3.blank?
+        marcxml.addSubfield(df, "a", i.notation.gsub(/\v/, '')) unless i.notation.blank?
+        marcxml.addSubfield(df, "a", i.non0.gsub(/\v/, '')) unless i.non0.blank?
+        marcxml.addSubfield(df, "a", i.comment5.gsub(/\v/, '')) unless i.comment5.blank?
+        marcxml.addSubfield(df, "a", i.comment6.gsub(/\v/, '')) unless i.comment6.blank?
+        marcxml.addSubfield(df, "a", i.comment7.gsub(/\v/, '')) unless i.comment7.blank?
+        marcxml.addSubfield(df, "a", i.owner.gsub(/\v/, '')) unless i.owner.blank?
+        marcxml.addSubfield(df, "a", i.non1.gsub(/\v/, '')) unless i.non1.blank?
+        marcxml.addSubfield(df, "a", i.size.gsub(/\v/, '')) unless i.size.blank?
+        marcxml.addSubfield(df, "a", i.color0.gsub(/\v/, '')) unless i.color0.blank?
+        marcxml.addSubfield(df, "a", i.color1.gsub(/\v/, '')) unless i.color1.blank?
+        marcxml.addSubfield(df, "a", i.color2.gsub(/\v/, '')) unless i.color2.blank?
+        marcxml.addSubfield(df, "a", i.color3.gsub(/\v/, '')) unless i.color3.blank?
+        marcxml.addSubfield(df, "a", i.non3.gsub(/\v/, '')) unless i.non3.blank?
+        marcxml.addSubfield(df, "a", i.comment8.gsub(/\v/, '')) unless i.comment8.blank?
+      end
+    end
 
     # Many of the codes have a supplemented page
     # documenting the restauration
@@ -65,7 +92,16 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "8", "01")
 
     marcxml.datafield("650", "a", shelf) unless shelf.blank?
-    marcxml.datafield("710", "a", place) unless place.blank?
+    
+    df = marcxml.datafield("700", "a", owner0.gsub( /\v/, ''))
+    marcxml.addSubfield(df, "4", "oth")
+    
+    df = marcxml.datafield("700", "a", owner1.gsub( /\v/, ''))
+    marcxml.addSubfield(df, "4", "oth")
+    
+    df = marcxml.datafield("710", "a", "Capella Sistina")
+    marcxml.addSubfield(df, "0", 51000666)
+    marcxml.addSubfield(df, "4", "evp")
 
     # if there is no Piece in Code throw an error
     ids, collection = make_include(Code.rismid, cs)
