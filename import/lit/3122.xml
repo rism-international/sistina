@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Exported from RISM CH (http://www.rism-ch.org/) Date: 2019-03-15 10:13:03 UTC -->
+<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+	<marc:record>
+		<marc:controlfield tag="001">3122</marc:controlfield>
+		<marc:controlfield tag="003">DE-633</marc:controlfield>
+		<marc:controlfield tag="005">20190312102004.0</marc:controlfield>
+		<marc:datafield tag="041" ind1="0" ind2=" ">
+			<marc:subfield code="a">ger</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="044" ind1=" " ind2=" ">
+			<marc:subfield code="a">XA-DE</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="100" ind1="1" ind2=" ">
+			<marc:subfield code="a">Haberl, Franz Xaver</marc:subfield>
+			<marc:subfield code="d">1840-1910</marc:subfield>
+			<marc:subfield code="0">35290</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="210" ind1=" " ind2=" ">
+			<marc:subfield code="a">HaberlV 1888</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="240" ind1="1" ind2="0">
+			<marc:subfield code="a">Bibliographischer und thematischer Katalog des Päpstlichen Kapellarchivs im Vatikan zu Rom. Nach den Originalcodices bearbeitet</marc:subfield>
+			<marc:subfield code="g">Thematic catalog</marc:subfield>
+			<marc:subfield code="h">Volume in a series</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="260" ind1=" " ind2=" ">
+			<marc:subfield code="a">Leipzig</marc:subfield>
+			<marc:subfield code="b">Breitkopf &amp; Härtel</marc:subfield>
+			<marc:subfield code="c">1888</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="300" ind1=" " ind2=" ">
+			<marc:subfield code="a">xi, 183 p.</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="337" ind1=" " ind2=" ">
+			<marc:subfield code="a">Printed medium</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="760" ind1="2" ind2=" ">
+			<marc:subfield code="g">vol. 2</marc:subfield>
+			<marc:subfield code="t">Bausteine für Musikgeschichte </marc:subfield>
+			<marc:subfield code="0">41001972</marc:subfield>
+		</marc:datafield>
+	</marc:record>
+</marc:collection>

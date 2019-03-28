@@ -29,3 +29,7 @@
 *.tar.bz2
 
 export/samples/test.xml
+
+.yardoc/
+doc/
+muscat/

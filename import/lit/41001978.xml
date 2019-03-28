@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Exported from RISM CH (http://www.rism-ch.org/) Date: 2019-03-15 10:08:23 UTC -->
+<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+	<marc:record>
+		<marc:controlfield tag="001">41001978</marc:controlfield>
+		<marc:controlfield tag="003">DE-633</marc:controlfield>
+		<marc:controlfield tag="005">20190312111317.0</marc:controlfield>
+		<marc:datafield tag="041" ind1="0" ind2=" ">
+			<marc:subfield code="a">ita</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="100" ind1="1" ind2=" ">
+			<marc:subfield code="a">Salvati, Vincenzo</marc:subfield>
+			<marc:subfield code="d">19.sc</marc:subfield>
+			<marc:subfield code="0">41021394</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="210" ind1=" " ind2=" ">
+			<marc:subfield code="a">SalvatiL 1863</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="240" ind1="1" ind2="0">
+			<marc:subfield code="a">Indice Dei Libri Di Musica Manoscritti e Stampati Esistenti nell&#39;Antico Archivio dei Cappellani Cantori Pontifici [...] a cura del Maestro pro tempore Vincenzo Avv.° Salvati.</marc:subfield>
+			<marc:subfield code="g">Catalog</marc:subfield>
+			<marc:subfield code="h">Monograph</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="260" ind1=" " ind2=" ">
+			<marc:subfield code="c">1863</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="337" ind1=" " ind2=" ">
+			<marc:subfield code="a">Manuscript</marc:subfield>
+		</marc:datafield>
+	</marc:record>
+</marc:collection>

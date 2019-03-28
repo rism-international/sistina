@@ -59,3 +59,5 @@ end
 
 # I want colors!
 gem 'colorize'
+
+gem 'yard'

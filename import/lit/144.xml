@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Exported from RISM CH (http://www.rism-ch.org/) Date: 2019-03-15 10:12:50 UTC -->
+<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+	<marc:record>
+		<marc:controlfield tag="001">144</marc:controlfield>
+		<marc:controlfield tag="003">DE-633</marc:controlfield>
+		<marc:controlfield tag="005">20190312095944.0</marc:controlfield>
+		<marc:datafield tag="041" ind1="0" ind2=" ">
+			<marc:subfield code="a">ita</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="044" ind1=" " ind2=" ">
+			<marc:subfield code="a">XA-IT</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="100" ind1="1" ind2=" ">
+			<marc:subfield code="a">Llorens Cisteró, José María</marc:subfield>
+			<marc:subfield code="d">1923*</marc:subfield>
+			<marc:subfield code="0">30027229</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="210" ind1=" " ind2=" ">
+			<marc:subfield code="a">LlorensS 1960</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="240" ind1="1" ind2="0">
+			<marc:subfield code="a">Capellae Sixtinae codices musicis notis instructi sive manu scripti sive praelo excussi</marc:subfield>
+			<marc:subfield code="g">Thematic catalog</marc:subfield>
+			<marc:subfield code="h">Monograph</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="260" ind1=" " ind2=" ">
+			<marc:subfield code="a">Roma</marc:subfield>
+			<marc:subfield code="c">1960</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="337" ind1=" " ind2=" ">
+			<marc:subfield code="a">Printed medium</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="500" ind1=" " ind2=" ">
+			<marc:subfield code="a">BrookCM 1997: 1097.1</marc:subfield>
+		</marc:datafield>
+		<marc:datafield tag="500" ind1=" " ind2=" ">
+			<marc:subfield code="a">V-CVbav</marc:subfield>
+		</marc:datafield>
+	</marc:record>
+</marc:collection>

@@ -17,7 +17,11 @@ class Code < ApplicationRecord
   def build_xml
     Code.instance_eval { @rismid += 1 }
     marcxml = FCS::Node.new
-    marcxml.leader
+    if make_type == "Print"
+      marcxml.leader("ncc")
+    else 
+      marcxml.leader
+    end
     marcxml.controlfield("001", Code.rismid)
     marcxml.datafield("041", "a", "lat")
     tit, shelf, cmpsr = make_standardTitle
@@ -25,6 +29,7 @@ class Code < ApplicationRecord
     marcxml.datafield("130", "a", tit) # Einordnungstitel
     marcxml.datafield("245", "a", make_titleOnSource)
     df = marcxml.datafield("260", "a", make_place)
+    marcxml.addSubfield(df, "c", owner1.gsub(/\v/, ''))
     marcxml.addSubfield(df, "c", make_date)
     marcxml.addSubfield(df, "8", "01")
 
@@ -34,11 +39,8 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "b", material.gsub( /\v/, '')) unless material.blank?
     marcxml.addSubfield(df, "c", size)
     marcxml.addSubfield(df, "8", 01)
-
-    # Bibliographical reference
-    df = marcxml.datafield("500", "a", lit) unless lit.blank?
-    marcxml.addSubfield(df, "a", notation) unless notation.blank?
     # Comments
+    df = marcxml.datafield("500", "a", notation)
     marcxml.addSubfield(df, "a", comment1.gsub( /\v/, '')) unless comment1.blank?
     marcxml.addSubfield(df, "a", non7.gsub( /\v/, '')) unless non7.blank?
     marcxml.addSubfield(df, "a", title_comment.gsub( /\v/, '').force_encoding("utf-8")) unless title_comment.blank?
@@ -92,7 +94,17 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "8", "01")
 
     marcxml.datafield("650", "a", shelf) unless shelf.blank?
-    
+ 
+    # Bibliographical reference
+    if x = make_lit 
+      then 
+      x.each do |i|
+        df = marcxml.datafield("691", "a", i[0].strip) unless i[0].blank?
+        marcxml.addSubfield(df, "n", i[1].strip) unless i[1].blank?
+        marcxml.addSubfield(df, "0", i[2]) unless i[2].blank?
+      end
+    end
+   
     df = marcxml.datafield("700", "a", owner0.gsub( /\v/, ''))
     marcxml.addSubfield(df, "4", "oth")
     
@@ -104,9 +116,7 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "4", "evp")
 
     # if there is no Piece in Code throw an error
-    ids, collection = make_include(Code.rismid, cs)
-    #if ids.empty?
-    #else
+    ids, collection = make_include(Code.rismid, cs, make_type)
     if ids.empty?
       puts "Empty Code generated: ".red + cs.to_s
     else 
@@ -134,6 +144,54 @@ class Code < ApplicationRecord
     return marcxml, collection
   end
 
+  def make_lit
+    r = []
+    should = false
+    [lit, sig0, non6, sig2, sig1, non15].each do |i|
+      should = should || (not i.blank?)
+    end
+    if should
+      lit.split(";").each_with_index do |v,i|
+        if not v.empty?
+          r[i] = v.split(',')
+          r[i][1] = r[i].drop(1).join(', ') unless r[i][1].blank?
+          case r[i][0]
+          when /Llorens/
+            r[i][0] = "LlorensS 1960"
+            r[i][2] = 144
+          when /Haberl/
+            r[i][0] = "HaberlV 1888"
+            r[i][2] = 3122
+          end
+        end
+      end
+      # Panuzzi :sig0
+      if not sig0.blank?
+        r << [ "PanuzziL 1687", sig0, 41001975 ]
+      end
+      # Celi :non6
+      if not non6.blank?
+        r << [ "CeliL 1753", non6, 41001973 ]
+      end
+      # Storace :sig2
+      if not sig2.blank?
+        r << [ "StoraceP 1813", sig2, 41001976 ]
+      end
+      # Salvati :sig1
+      if not sig1.blank?
+        r << [ "SalvatiL 1863", sig1, 41001978 ]
+      end
+      # Perfetti :non15
+      if not non15.blank?
+        r << [ "PerfettiL 1856", non15, 41001977 ]
+      end
+      # Zappini --
+    else
+      r = false
+    end
+    return r
+  end
+
   def make_format
     if /Chorbuch/.match(t_)
       f = "1 choirbook: " << n_ << "f."
@@ -143,7 +201,7 @@ class Code < ApplicationRecord
     return f
   end
 
-  def make_include(rismid, cs)
+  def make_include(rismid, cs, type)
     # for all the picese
     # export cs as an argument to Piece.build_xml($cs)
     # call Piece.build_xml
@@ -155,9 +213,11 @@ class Code < ApplicationRecord
       end
     end
     Piece.where(cs: cs).each do |p|
-      id, marc = p.build_xml(rismid)
-      includes.doc.root << marc.doc.children.first
-      ids << id 
+      if not p.nr%1000==0
+        id, marc = p.build_xml(rismid, type)
+        includes.doc.root << marc.doc.children.first
+        ids << id 
+      end
     end
     return ids, includes
   end
@@ -395,12 +455,10 @@ class Code < ApplicationRecord
     #rx = Code.sample
     rx.each do |r|
       marc, pieces = r.build_xml
-      #marc = r.build_xml(rismid += 1)
       collection.doc.root << marc.document.doc.children.first
-#      collection.doc.root << marc.node
       collection.doc.root << pieces.doc.children.first
     end
-    outfile.write(collection.doc.to_xml)
+    outfile.write(collection.to_xml)
   end
   
   def self.sample
