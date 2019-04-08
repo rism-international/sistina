@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+  <record>
+    <controlfield tag="001">85715027</controlfield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">V-CVbav$cCS-666$eBiblioteca Apostolica Vaticana$x30077306</subfield>
+    </datafield>
+  </record>
+</collection>
+
