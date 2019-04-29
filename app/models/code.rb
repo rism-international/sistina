@@ -65,44 +65,36 @@ class Code < ApplicationRecord
     unless u.empty?
       u.each do |i|
         str = ""
+        str += (i.non0.gsub(/\v/, '') + ". (Nr. im Codes) ") unless i.non0.blank?
         str += "eigenst. Einh. " + i.pages unless i.pages.blank?
-        str += "; Nr. im Codes: " + i.non0.gsub(/\v/, '') unless i.non0.blank?
+        str += " "
         str += i.t_ unless i.t_.blank?
         str += "; Material: " + i.material unless i.material.blank?
         str += "; Papierfarbe: " + i.comment1 unless i.comment1.blank?
-        str += i.comment3.gsub(/\v/, '') unless i.comment3.blank?
-        marcxml.addSubfield(df, "a", str)
-        marcxml.addSubfield(df, "a", i.comment0) unless i.comment0.blank?
-        marcxml.addSubfield(df, "a", i.comment2.gsub(/\v/, '')) unless i.comment2.blank?
-        str = ""
-        str += "Notation: " + i.notation.gsub(/\v/, '') unless i.notation.blank?
+        str += "; Konsistenz: " + i.comment3.gsub(/\v/, '') unless i.comment3.blank?
+        str += "; Blindline: " + i.comment0 unless i.comment0.blank?
+        str += "; Notation: " + i.notation.gsub(/\v/, '') unless i.notation.blank?
         str += "; " + i.comment5.gsub(/\v/, '') unless i.comment5.blank?
         str += "; " + i.comment6.gsub(/\v/, '') unless i.comment6.blank?
+        str += "; " + i.comment7.gsub(/\v/, '') unless i.comment7.blank?
+        str += "; Tinte (Raster): " + i.color0.gsub(/\v/, '') unless i.color0.blank?
+        str += "; Tinte (Text): " + i.color1.gsub(/\v/, '') unless i.color1.blank?
+        str += "; Tinte (Noten): " + i.color2.gsub(/\v/, '') unless i.color2.blank?
+        str += "; Tinte (Kalligraphien): " + i.color3.gsub(/\v/, '') unless i.color3.blank?
+        str += "; Schreiber:  " + i.owner.gsub(/\v/, '') unless i.owner.blank?
+        str += "; Schriftform:  " + i.non1.gsub(/\v/, '') unless i.non1.blank?
+        str += "; Schriftspiegel:  " + i.size.gsub(/\v/, '') unless i.size.blank?
+        str += "; Seitenzahlen:  " + i.comment8.gsub(/\v/, '') unless i.comment8.blank?
+        str += "; Kalligraphien:  " + i.comment2.gsub(/\v/, '') unless i.comment2.blank?
+        str += "; Wasserzeichen:  " + i.non3.gsub(/\v/, '') unless i.non3.blank?
         marcxml.addSubfield(df, "a", str)
-        marcxml.addSubfield(df, "a", i.comment7.gsub(/\v/, '')) unless i.comment7.blank?
-        marcxml.addSubfield(df, "a", i.owner.gsub(/\v/, '')) unless i.owner.blank?
-        marcxml.addSubfield(df, "a", i.non1.gsub(/\v/, '')) unless i.non1.blank?
-        marcxml.addSubfield(df, "a", i.size.gsub(/\v/, '')) unless i.size.blank?
-        str = ""
-        str += i.color0.gsub(/\v/, '') unless i.color0.blank?
-        str += i.color1.gsub(/\v/, '') unless i.color1.blank?
-        str += i.color2.gsub(/\v/, '') unless i.color2.blank?
-        str += i.color3.gsub(/\v/, '') unless i.color3.blank?
-        marcxml.addSubfield(df, "a", "Tintenfarben: " + str) unless str.blank?
-        str = ""
-        str += i.non3.gsub(/\v/, '') unless i.non3.blank?
-        str += i.comment8.gsub(/\v/, '') unless i.comment8.blank?
-        marcxml.addSubfield(df, "a", str) unless str.blank?
       end
     end
 
     # Many of the codes have a supplemented page
     # documenting the restauration
     marcxml.datafield("525", "a", @supplement) unless @supplement.blank?
-    if not binding_comment.blank?
-      df = marcxml.datafield("563", "a", binding_comment.gsub( /\v/, '')) 
-      marcxml.addSubfield(df, "8", "01")
-    end
+    marcxml.datafield("563", "a", binding_comment.gsub( /\v/, '')) unless binding_comment.blank?
     df = marcxml.datafield("593", "a", make_type)
     marcxml.addSubfield(df, "8", "01")
 
@@ -457,7 +449,9 @@ class Code < ApplicationRecord
   end
 
   def self.export
+
     outfile = File.new("#{Rails.root}/export/export.xml", "w")
+
     collection = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
       xml.collection('xmlns' => "http://www.loc.gov/MARC21/slim") do
       end
@@ -471,26 +465,7 @@ class Code < ApplicationRecord
     end
     outfile.write(collection.to_xml)
   end
-
-  def self.onlyPrints
-    outfile = File.new("#{Rails.root}/export/prints.xml", "w")
-    collection = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-      xml.collection('xmlns' => "http://www.loc.gov/MARC21/slim") do
-      end
-    end
-    rx = Code.prints
-    rx.each do |r|
-      marc, pieces = r.build_xml
-      collection.doc.root << marc.document.doc.children.first
-      collection.doc.root << pieces.doc.children.first
-    end
-    outfile.write(collection.to_xml)
-  end
-
-  def self.prints
-    Code.where("t_ like 'Druck%'")
-  end
-   
+  
   def self.sample
     #return Code.where(cs: 63)
     return Code.where("content LIKE ?", '%:%')

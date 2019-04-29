@@ -64,8 +64,21 @@ class Piece < ApplicationRecord
     c = Concordance.where(nr: nr)
     unless c.empty? 
       c.each do |i|
-        [i.ccd0, i.ccd1, i.ccd2, i.comment, i.composer, i.title].each do |f|
-          if x = make("", f) then marcxml.addSubfield(df, "a", x) end
+        x = ""
+        if x << make("", i.composer).to_s then x << ": " end
+        if x << make("", i.title).to_s then x << ". " end
+        [i.ccd0, i.ccd1, i.ccd2].each do |f|
+          if y = make("", f) 
+            then 
+            x << ", " 
+            x << y 
+          end
+        end 
+        if df.values[0] == "599"
+        then 
+          marcxml.addSubfield(df, "a", x) 
+        else 
+          df = marcxml.datafield(599, "a", '')
         end
       end
     end
