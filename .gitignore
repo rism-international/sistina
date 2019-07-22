@@ -33,3 +33,4 @@ export/samples/test.xml
 .yardoc/
 doc/
 muscat/
+/muscat

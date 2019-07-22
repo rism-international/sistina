@@ -61,6 +61,20 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "a", non13.gsub( /\v/, '')) unless non13.blank?
     marcxml.addSubfield(df, "a", non14.gsub( /\v/, '')) unless non14.blank?
     marcxml.addSubfield(df, "a", place) unless place.blank?
+    p = Part.where(nr: cs * 1000)
+    unless p.empty?
+      p.each do |i|
+        str = ""
+        str += "Vorsatz Nr. " + i.part_nr unless i.part_nr.blank?
+        str += " " + i.part_fol unless i.part_fol.blank?
+        str += " " + i.title unless i.title.blank?
+        str += " " + i.composer unless i.composer.blank?
+        str += " " + i.textincipit unless i.textincipit.blank?
+        str += " " + i.voices unless i.voices.blank?
+        str += " " + i.comment.gsub(/\v/, '') unless i.comment.blank?
+        marcxml.addSubfield(df, "a", str) unless str.blank?
+      end
+    end
     u = Unit.where(cs: cs)
     unless u.empty?
       u.each do |i|
@@ -85,9 +99,13 @@ class Code < ApplicationRecord
         str += "; Schriftform:  " + i.non1.gsub(/\v/, '') unless i.non1.blank?
         str += "; Schriftspiegel:  " + i.size.gsub(/\v/, '') unless i.size.blank?
         str += "; Seitenzahlen:  " + i.comment8.gsub(/\v/, '') unless i.comment8.blank?
+#        str += "; Wasserzeichen: " + i.non3.gsub(/\v/, '') unless i.non3.blank? # Watermark
         str += "; Kalligraphien:  " + i.comment2.gsub(/\v/, '') unless i.comment2.blank?
-        str += "; Wasserzeichen:  " + i.non3.gsub(/\v/, '') unless i.non3.blank?
         marcxml.addSubfield(df, "a", str)
+      end
+      u.each do |i|
+        df = marcxml.datafield("592", "a", i.non3.gsub(/\v/, '')) unless i.non3.blank? # Watermark
+        marcxml.addSubfield(df, "8", "01")
       end
     end
 
