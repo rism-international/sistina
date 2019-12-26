@@ -40,6 +40,12 @@ Code.export
 
 The result is written to sistina/export/
 
+Please make sure you restart rails console after saving the edited files so that changes take effect.
+
+# Import to Muscat
+
+The import of the FCS-Data into muscat is done from muscats rails console.
+
 # Indexing in Muscat
 
 The Indexing of the Muscat data is described in the Muscat Package. More sophisticated and sometimes faster runs are described in short here:

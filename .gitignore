@@ -34,3 +34,5 @@ export/samples/test.xml
 doc/
 muscat/
 /muscat
+import/lit/people.xml
+import/lit/sources.xml

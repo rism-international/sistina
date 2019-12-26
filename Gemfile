@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.5.3'
+ruby '2.5.1'
 
 gem 'pry'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -61,3 +61,6 @@ end
 gem 'colorize'
 
 gem 'yard'
+gem 'csv'
+gem 'pry'
+gem 'net'

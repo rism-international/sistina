@@ -48,7 +48,7 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "a", title_comment.gsub( /\v/, '').force_encoding("utf-8")) unless title_comment.blank?
     marcxml.addSubfield(df, "a", "Aktuelle Blattzählung: " + pagenumbering.gsub( /\v/, '')) unless pagenumbering.blank?
     marcxml.addSubfield(df, "a", "Notation: #{notation}") unless notation.blank?
-    marcxml.addSubfield(df, "a", "Signatur: " + non7.gsub( /\v/, '')) unless non7.blank?
+#    marcxml.addSubfield(df, "a", "Signatur: " + non7.gsub( /\v/, '')) unless non7.blank?
     marcxml.addSubfield(df, "a", "Dekoration: " + non4.gsub( /\v/, '')) unless non4.blank?
     marcxml.addSubfield(df, "a", "Kommentar zur Lagenstruktur: " + comment0.gsub( /\v/, '')) unless comment0.blank?
     marcxml.addSubfield(df, "a", comment2.gsub( /\v/, '')) unless comment2.blank? # Benutzungsspuren
@@ -112,7 +112,11 @@ class Code < ApplicationRecord
     # Many of the codes have a supplemented page
     # documenting the restauration
     marcxml.datafield("525", "a", @supplement) unless @supplement.blank?
-    marcxml.datafield("563", "a", binding_comment.gsub( /\v/, '')) unless binding_comment.blank?
+    #marcxml.datafield("563", "a", binding_comment.gsub( /\v/, '')) unless binding_comment.blank?
+    if not binding_comment.blank?  
+      df = marcxml.datafield("563", "a", binding_comment.gsub( /\v/, '')) 
+      marcxml.addSubfield(df, "8", "01")
+    end
     df = marcxml.datafield("593", "a", make_type)
     marcxml.addSubfield(df, "8", "01")
 
@@ -154,6 +158,7 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "d", sig0) unless sig0.blank?
     marcxml.addSubfield(df, "d", sig1) unless sig1.blank?
     marcxml.addSubfield(df, "d", sig2) unless sig2.blank?
+    marcxml.addSubfield(df, "d", non7.gsub( /\v/, '')) unless non7.blank?
     marcxml.addSubfield(df, "z", "Fondo Cappella Sistina")
 
     # if digitized add link to 856

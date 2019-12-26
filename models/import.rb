@@ -2,7 +2,7 @@ require 'csv'
 require 'pry'
 require 'net/http'
 
-module FCS    # Fondo Capella Sistina
+#module FCS    # Fondo Capella Sistina
   class Import
     def initialize
       @uri = URI('http://localhost')
@@ -269,4 +269,4 @@ module FCS    # Fondo Capella Sistina
       return result
     end
   end
-end
+#end
