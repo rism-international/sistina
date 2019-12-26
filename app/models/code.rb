@@ -23,6 +23,7 @@ class Code < ApplicationRecord
       marcxml.leader
     end
     marcxml.controlfield("001", Code.rismid)
+    marcxml.datafield("040", "a", "deutsch")
     marcxml.datafield("041", "a", "lat")
     tit, shelf, cmpsr = make_standardTitle
     marcxml.datafield("100", "a", cmpsr) unless cmpsr.blank?
@@ -51,7 +52,7 @@ class Code < ApplicationRecord
 #    marcxml.addSubfield(df, "a", "Signatur: " + non7.gsub( /\v/, '')) unless non7.blank?
     marcxml.addSubfield(df, "a", "Dekoration: " + non4.gsub( /\v/, '')) unless non4.blank?
     marcxml.addSubfield(df, "a", "Kommentar zur Lagenstruktur: " + comment0.gsub( /\v/, '')) unless comment0.blank?
-    marcxml.addSubfield(df, "a", comment2.gsub( /\v/, '')) unless comment2.blank? # Benutzungsspuren
+    marcxml.addSubfield(df, "a", "Zustand: " + comment2.gsub( /\v/, '')) unless comment2.blank? # Benutzungsspuren
     marcxml.addSubfield(df, "a", comment3.gsub( /\v/, '')) unless comment3.blank?
     marcxml.addSubfield(df, "a", non1.gsub( /\v/, '')) unless non1.blank?
     marcxml.addSubfield(df, "a", non2.gsub( /\v/, '')) unless non2.blank?
@@ -169,6 +170,7 @@ class Code < ApplicationRecord
       marcxml.addSubfield(df, "x", "Digitalization")
       marcxml.addSubfield(df, "z", "Digitalisat")
     end
+    df = marcxml.datafield("940", "a", "Fremddateneinspielung")
     return marcxml, collection
   end
 
