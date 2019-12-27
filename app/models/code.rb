@@ -137,11 +137,15 @@ class Code < ApplicationRecord
       end
     end
    
-    df = marcxml.datafield("700", "a", owner0.gsub( /\v/, ' '))
-    marcxml.addSubfield(df, "4", "oth")
+    if not owner0.blank?
+      df = marcxml.datafield("700", "a", owner0.gsub( /\v/, ' '))
+      marcxml.addSubfield(df, "4", "oth")
+    end
     
-    df = marcxml.datafield("700", "a", owner1.gsub( /\v/, ' '))
-    marcxml.addSubfield(df, "4", "oth")
+    if not owner1.blank?
+      df = marcxml.datafield("700", "a", owner1.gsub( /\v/, ' '))
+      marcxml.addSubfield(df, "4", "oth")
+    end
     
     df = marcxml.datafield("710", "a", "Capella Sistina")
     marcxml.addSubfield(df, "0", 51000666)
