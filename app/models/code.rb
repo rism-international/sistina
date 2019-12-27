@@ -64,17 +64,19 @@ class Code < ApplicationRecord
 #    marcxml.addSubfield(df, "a", place) unless place.blank?
     p = Part.where(nr: cs * 1000)
     unless p.empty?
+      str = ""
       p.each do |i|
-        str = ""
-        str += "Vorsatz Nr. " + i.part_nr unless i.part_nr.blank?
+        str += " " + i.part_nr unless i.part_nr.blank?
         str += " " + i.part_fol unless i.part_fol.blank?
         str += " " + i.title unless i.title.blank?
         str += " " + i.composer unless i.composer.blank?
         str += " " + i.textincipit unless i.textincipit.blank?
         str += " " + i.voices unless i.voices.blank?
         str += " " + i.comment.gsub(/\v/, ' ') unless i.comment.blank?
-        marcxml.addSubfield(df, "a", str) unless str.blank?
+        str += ", "
+      #  marcxml.addSubfield(df, "a", str + ", ") unless str.blank?
       end
+      marcxml.addSubfield(df, "a", str) unless str.blank?
     end
     u = Unit.where(cs: cs)
     unless u.empty?
