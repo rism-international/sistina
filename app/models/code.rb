@@ -30,38 +30,38 @@ class Code < ApplicationRecord
     marcxml.datafield("130", "a", tit) # Einordnungstitel
     marcxml.datafield("245", "a", make_titleOnSource)
     df = marcxml.datafield("260", "a", make_place)
-    marcxml.addSubfield(df, "b", owner1.gsub(/\v/, ''))
+    marcxml.addSubfield(df, "b", owner1.gsub(/\v/, ' '))
     marcxml.addSubfield(df, "c", make_date)
     marcxml.addSubfield(df, "8", "01")
 
     # Physical description
     # Dimensions
     df = marcxml.datafield("300", "a", make_format)
-    marcxml.addSubfield(df, "b", material.gsub( /\v/, '')) unless material.blank?
+    marcxml.addSubfield(df, "b", material.gsub( /\v/, ' ')) unless material.blank?
     marcxml.addSubfield(df, "c", size)
     marcxml.addSubfield(df, "8", "01")
     if not non0.blank?  
-      df = marcxml.datafield("500", "a", "Aktuelle Lagenstrukturen: " + non0.gsub( /\v/, '')) 
+      df = marcxml.datafield("500", "a", "Aktuelle Lagenstrukturen: " + non0.gsub( /\v/, ' ')) 
       marcxml.addSubfield(df, "8", "01")
     end
     # Comments
-    df = marcxml.datafield("500", "a", comment1.gsub( /\v/, ''))
-    marcxml.addSubfield(df, "a", title_comment.gsub( /\v/, '').force_encoding("utf-8")) unless title_comment.blank?
+    df = marcxml.datafield("500", "a", comment1.gsub( /\v/, ' '))
+    marcxml.addSubfield(df, "a", title_comment.gsub( /\v/, ' ').force_encoding("utf-8")) unless title_comment.blank?
     marcxml.addSubfield(df, "a", "Aktuelle Blattzählung: " + pagenumbering.gsub( /\v/, '')) unless pagenumbering.blank?
     marcxml.addSubfield(df, "a", "Notation: #{notation}") unless notation.blank?
 #    marcxml.addSubfield(df, "a", "Signatur: " + non7.gsub( /\v/, '')) unless non7.blank?
-    marcxml.addSubfield(df, "a", "Dekoration: " + non4.gsub( /\v/, '')) unless non4.blank?
-    marcxml.addSubfield(df, "a", "Kommentar zur Lagenstruktur: " + comment0.gsub( /\v/, '')) unless comment0.blank?
-    marcxml.addSubfield(df, "a", "Zustand: " + comment2.gsub( /\v/, '')) unless comment2.blank? # Benutzungsspuren
-    marcxml.addSubfield(df, "a", comment3.gsub( /\v/, '')) unless comment3.blank?
-    marcxml.addSubfield(df, "a", non1.gsub( /\v/, '')) unless non1.blank?
-    marcxml.addSubfield(df, "a", non2.gsub( /\v/, '')) unless non2.blank?
-    marcxml.addSubfield(df, "a", non3.gsub( /\v/, '')) unless non3.blank?
-    marcxml.addSubfield(df, "a", non11.gsub( /\v/, '')) unless non11.blank?
-    marcxml.addSubfield(df, "a", non12.gsub( /\v/, '')) unless non12.blank?
-    marcxml.addSubfield(df, "a", non13.gsub( /\v/, '')) unless non13.blank?
-    marcxml.addSubfield(df, "a", non14.gsub( /\v/, '')) unless non14.blank?
-    marcxml.addSubfield(df, "a", place) unless place.blank?
+    marcxml.addSubfield(df, "a", "Dekoration: " + non4.gsub( /\v/, ' ')) unless non4.blank?
+    marcxml.addSubfield(df, "a", "Kommentar zur Lagenstruktur: " + comment0.gsub( /\v/, ' ')) unless comment0.blank?
+    marcxml.addSubfield(df, "a", "Zustand: " + comment2.gsub( /\v/, ' ')) unless comment2.blank? # Benutzungsspuren
+    marcxml.addSubfield(df, "a", "Foliierung/en: " + comment3.gsub( /\v/, ' ')) unless comment3.blank?
+    marcxml.addSubfield(df, "a", non1.gsub( /\v/, ' ')) unless non1.blank?
+    marcxml.addSubfield(df, "a", non2.gsub( /\v/, ' ')) unless non2.blank?
+    marcxml.addSubfield(df, "a", non3.gsub( /\v/, ' ')) unless non3.blank?
+    marcxml.addSubfield(df, "a", non11.gsub( /\v/, ' ')) unless non11.blank?
+    marcxml.addSubfield(df, "a", non12.gsub( /\v/, ' ')) unless non12.blank?
+    marcxml.addSubfield(df, "a", non13.gsub( /\v/, ' ')) unless non13.blank?
+    marcxml.addSubfield(df, "a", non14.gsub( /\v/, ' ')) unless non14.blank?
+#    marcxml.addSubfield(df, "a", place) unless place.blank?
     p = Part.where(nr: cs * 1000)
     unless p.empty?
       p.each do |i|
@@ -72,7 +72,7 @@ class Code < ApplicationRecord
         str += " " + i.composer unless i.composer.blank?
         str += " " + i.textincipit unless i.textincipit.blank?
         str += " " + i.voices unless i.voices.blank?
-        str += " " + i.comment.gsub(/\v/, '') unless i.comment.blank?
+        str += " " + i.comment.gsub(/\v/, ' ') unless i.comment.blank?
         marcxml.addSubfield(df, "a", str) unless str.blank?
       end
     end
@@ -80,32 +80,32 @@ class Code < ApplicationRecord
     unless u.empty?
       u.each do |i|
         str = ""
-        str += (i.non0.gsub(/\v/, '') + ". (Nr. im Codes) ") unless i.non0.blank?
+        str += (i.non0.gsub(/\v/, ' ') + ". (Nr. im Codes) ") unless i.non0.blank?
         str += "eigenst. Einh. " + i.pages unless i.pages.blank?
         str += " "
         str += i.t_ unless i.t_.blank?
         str += "; Material: " + i.material unless i.material.blank?
         str += "; Papierfarbe: " + i.comment1 unless i.comment1.blank?
-        str += "; Konsistenz: " + i.comment3.gsub(/\v/, '') unless i.comment3.blank?
+        str += "; Konsistenz: " + i.comment3.gsub(/\v/, ' ') unless i.comment3.blank?
         str += "; Blindline: " + i.comment0 unless i.comment0.blank?
-        str += "; Notation: " + i.notation.gsub(/\v/, '') unless i.notation.blank?
-        str += "; " + i.comment5.gsub(/\v/, '') unless i.comment5.blank?
-        str += "; " + i.comment6.gsub(/\v/, '') unless i.comment6.blank?
-        str += "; " + i.comment7.gsub(/\v/, '') unless i.comment7.blank?
-        str += "; Tinte (Raster): " + i.color0.gsub(/\v/, '') unless i.color0.blank?
-        str += "; Tinte (Text): " + i.color1.gsub(/\v/, '') unless i.color1.blank?
-        str += "; Tinte (Noten): " + i.color2.gsub(/\v/, '') unless i.color2.blank?
-        str += "; Tinte (Kalligraphien): " + i.color3.gsub(/\v/, '') unless i.color3.blank?
-        str += "; Schreiber:  " + i.owner.gsub(/\v/, '') unless i.owner.blank?
-        str += "; Schriftform:  " + i.non1.gsub(/\v/, '') unless i.non1.blank?
-        str += "; Schriftspiegel:  " + i.size.gsub(/\v/, '') unless i.size.blank?
-        str += "; Seitenzahlen:  " + i.comment8.gsub(/\v/, '') unless i.comment8.blank?
+        str += "; Notation: " + i.notation.gsub(/\v/, ' ') unless i.notation.blank?
+        str += "; " + i.comment5.gsub(/\v/, ' ') unless i.comment5.blank?
+        str += "; " + i.comment6.gsub(/\v/, ' ') unless i.comment6.blank?
+        str += "; " + i.comment7.gsub(/\v/, ' ') unless i.comment7.blank?
+        str += "; Tinte (Raster): " + i.color0.gsub(/\v/, ' ') unless i.color0.blank?
+        str += "; Tinte (Text): " + i.color1.gsub(/\v/, ' ') unless i.color1.blank?
+        str += "; Tinte (Noten): " + i.color2.gsub(/\v/, ' ') unless i.color2.blank?
+        str += "; Tinte (Kalligraphien): " + i.color3.gsub(/\v/, ' ') unless i.color3.blank?
+        str += "; Schreiber:  " + i.owner.gsub(/\v/, ' ') unless i.owner.blank?
+        str += "; Schriftform:  " + i.non1.gsub(/\v/, ' ') unless i.non1.blank?
+        str += "; Schriftspiegel:  " + i.size.gsub(/\v/, ' ') unless i.size.blank?
+        str += "; Seitenzahlen:  " + i.comment8.gsub(/\v/, ' ') unless i.comment8.blank?
 #        str += "; Wasserzeichen: " + i.non3.gsub(/\v/, '') unless i.non3.blank? # Watermark
-        str += "; Kalligraphien:  " + i.comment2.gsub(/\v/, '') unless i.comment2.blank?
+        str += "; Kalligraphien:  " + i.comment2.gsub(/\v/, ' ') unless i.comment2.blank?
         marcxml.addSubfield(df, "a", str)
       end
       u.each do |i|
-        df = marcxml.datafield("592", "a", i.non3.gsub(/\v/, '')) unless i.non3.blank? # Watermark
+        df = marcxml.datafield("592", "a", i.non3.gsub(/\v/, ' ')) unless i.non3.blank? # Watermark
         marcxml.addSubfield(df, "8", "01")
       end
     end
@@ -114,8 +114,12 @@ class Code < ApplicationRecord
     # documenting the restauration
     marcxml.datafield("525", "a", @supplement) unless @supplement.blank?
     #marcxml.datafield("563", "a", binding_comment.gsub( /\v/, '')) unless binding_comment.blank?
+    if not place.blank?
+      marcxml.datafield("561", "a", place) 
+      marcxml.addSubfield(df, "8", "01")
+    end
     if not binding_comment.blank?  
-      df = marcxml.datafield("563", "a", binding_comment.gsub( /\v/, '')) 
+      df = marcxml.datafield("563", "a", binding_comment.gsub( /\v/, ' ')) 
       marcxml.addSubfield(df, "8", "01")
     end
     df = marcxml.datafield("593", "a", make_type)
@@ -133,10 +137,10 @@ class Code < ApplicationRecord
       end
     end
    
-    df = marcxml.datafield("700", "a", owner0.gsub( /\v/, ''))
+    df = marcxml.datafield("700", "a", owner0.gsub( /\v/, ' '))
     marcxml.addSubfield(df, "4", "oth")
     
-    df = marcxml.datafield("700", "a", owner1.gsub( /\v/, ''))
+    df = marcxml.datafield("700", "a", owner1.gsub( /\v/, ' '))
     marcxml.addSubfield(df, "4", "oth")
     
     df = marcxml.datafield("710", "a", "Capella Sistina")
@@ -159,7 +163,7 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "d", sig0) unless sig0.blank?
     marcxml.addSubfield(df, "d", sig1) unless sig1.blank?
     marcxml.addSubfield(df, "d", sig2) unless sig2.blank?
-    marcxml.addSubfield(df, "d", non7.gsub( /\v/, '')) unless non7.blank?
+    marcxml.addSubfield(df, "d", non7.gsub( /\v/, ' ')) unless non7.blank?
     marcxml.addSubfield(df, "z", "Fondo Cappella Sistina")
 
     # if digitized add link to 856
