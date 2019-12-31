@@ -41,7 +41,10 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "c", size)
     marcxml.addSubfield(df, "8", "01")
     if not non0.blank?  
-      df = marcxml.datafield("500", "a", "Aktuelle Lagenstrukturen: " + non0.gsub( /\v/, ' ')) 
+      str = ""
+      str += "Aktuelle Lagenstruktur: " + non0.gsub( /\v/, ' ')
+      str += comment0.gsub( /\v/, ' ') unless comment0.blank?
+      df = marcxml.datafield("500", "a", str) 
       marcxml.addSubfield(df, "8", "01")
     end
     # Comments
@@ -51,7 +54,6 @@ class Code < ApplicationRecord
     marcxml.addSubfield(df, "a", "Notation: #{notation}") unless notation.blank?
 #    marcxml.addSubfield(df, "a", "Signatur: " + non7.gsub( /\v/, '')) unless non7.blank?
     marcxml.addSubfield(df, "a", "Dekoration: " + non4.gsub( /\v/, ' ')) unless non4.blank?
-    marcxml.addSubfield(df, "a", "Kommentar zur Lagenstruktur: " + comment0.gsub( /\v/, ' ')) unless comment0.blank?
     marcxml.addSubfield(df, "a", "Zustand: " + comment2.gsub( /\v/, ' ')) unless comment2.blank? # Benutzungsspuren
     marcxml.addSubfield(df, "a", "Foliierung/en: " + comment3.gsub( /\v/, ' ')) unless comment3.blank?
     marcxml.addSubfield(df, "a", non1.gsub( /\v/, ' ')) unless non1.blank?
@@ -117,7 +119,7 @@ class Code < ApplicationRecord
 
     # Many of the codes have a supplemented page
     # documenting the restauration
-    marcxml.datafield("525", "a", @supplement) unless @supplement.blank?
+#    marcxml.datafield("525", "a", @supplement) unless @supplement.blank?
     #marcxml.datafield("563", "a", binding_comment.gsub( /\v/, '')) unless binding_comment.blank?
     if not place.blank?
       marcxml.datafield("561", "a", place) 
