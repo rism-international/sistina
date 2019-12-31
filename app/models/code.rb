@@ -82,13 +82,13 @@ class Code < ApplicationRecord
     unless u.empty?
       u.each do |i|
         str = ""
-        str += (i.non0.gsub(/\v/, ' ') + ". (Nr. im Codes) ") unless i.non0.blank?
-        str += "eigenst. Einh. " + i.pages unless i.pages.blank?
+        str += (i.non0.gsub(/\v/, ' ') + ". ") unless i.non0.blank?
+        str += "Fol. " + i.pages unless i.pages.blank?
         str += " "
-        str += i.t_ unless i.t_.blank?
+        str += "(" + i.t_ + ")" unless i.t_.blank?
         str += "; Material: " + i.material unless i.material.blank?
         str += "; Papierfarbe: " + i.comment1 unless i.comment1.blank?
-        str += "; Konsistenz: " + i.comment3.gsub(/\v/, ' ') unless i.comment3.blank?
+        str += "; Beschaffenheit Beschreibstoff: " + i.comment3.gsub(/\v/, ' ') unless i.comment3.blank?
         str += "; Blindline: " + i.comment0 unless i.comment0.blank?
         str += "; Notation: " + i.notation.gsub(/\v/, ' ') unless i.notation.blank?
         str += "; " + i.comment5.gsub(/\v/, ' ') unless i.comment5.blank?
