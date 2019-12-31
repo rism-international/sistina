@@ -42,6 +42,10 @@ The result is written to sistina/export/
 
 Please make sure you restart rails console after saving the edited files so that changes take effect.
 
+# Make the Holdings
+
+Consult the inline documentation of sistina/makeHoldings.rb
+
 # Import to Muscat
 
 The import of the FCS-Data into muscat is done from muscats rails console.
