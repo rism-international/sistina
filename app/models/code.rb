@@ -105,8 +105,8 @@ class Code < ApplicationRecord
         str += "; Schreiber:  " + i.owner.gsub(/\v/, ' ') unless i.owner.blank?
         str += "; Notation: " + i.notation.gsub(/\v/, ' ') unless i.notation.blank?
         str += "; Schriftform:  " + i.non1.gsub(/\v/, ' ') unless i.non1.blank?
-#        str += "; Wasserzeichen: " + i.non3.gsub(/\v/, '') unless i.non3.blank? # Watermark
         str += "; Illumination:  " + i.comment2.gsub(/\v/, ' ') unless i.comment2.blank?
+        str += "; Wasserzeichen: " + i.non3.gsub(/\v/, '') unless i.non3.blank? # Watermark
         marcxml.addSubfield(df, "a", str)
       end
       u.each do |i|
@@ -130,7 +130,8 @@ class Code < ApplicationRecord
     df = marcxml.datafield("593", "a", make_type)
     marcxml.addSubfield(df, "8", "01")
 
-    marcxml.datafield("650", "a", shelf) unless shelf.blank?
+    #marcxml.datafield("650", "a", shelf) unless shelf.blank?
+    marcxml.datafield("650", "a", content) unless content.blank?
  
     # Bibliographical reference
     if x = make_lit 
