@@ -90,20 +90,23 @@ class Code < ApplicationRecord
         str += "; Papierfarbe: " + i.comment1 unless i.comment1.blank?
         str += "; Beschaffenheit Beschreibstoff: " + i.comment3.gsub(/\v/, ' ') unless i.comment3.blank?
         str += "; Blindline: " + i.comment0 unless i.comment0.blank?
-        str += "; Notation: " + i.notation.gsub(/\v/, ' ') unless i.notation.blank?
         str += "; " + i.comment5.gsub(/\v/, ' ') unless i.comment5.blank?
-        str += "; " + i.comment6.gsub(/\v/, ' ') unless i.comment6.blank?
-        str += "; " + i.comment7.gsub(/\v/, ' ') unless i.comment7.blank?
-        str += "; Tinte (Raster): " + i.color0.gsub(/\v/, ' ') unless i.color0.blank?
+        if not (i.size.blank? and i.comment8.blank? and i.comment6.blank? and i.comment7.blank?)
+          str += "; Seitenpräparation: " 
+          str += "Schriftspiegel " + i.size.gsub(/\v/, ' ') unless i.size.blank?
+          str += "; " + i.comment8.gsub(/\v/, ' ') unless i.comment8.blank? #Seitenzahlen
+          str += "; " + i.comment6.gsub(/\v/, ' ') unless i.comment6.blank? #Seitenpraeparation
+          str += "; " + i.comment7.gsub(/\v/, ' ') unless i.comment7.blank?
+        end
+        str += "; Tinte (Rastrierung): " + i.color0.gsub(/\v/, ' ') unless i.color0.blank?
         str += "; Tinte (Text): " + i.color1.gsub(/\v/, ' ') unless i.color1.blank?
         str += "; Tinte (Noten): " + i.color2.gsub(/\v/, ' ') unless i.color2.blank?
-        str += "; Tinte (Kalligraphien): " + i.color3.gsub(/\v/, ' ') unless i.color3.blank?
+        str += "; Tinte (Illumination): " + i.color3.gsub(/\v/, ' ') unless i.color3.blank?
         str += "; Schreiber:  " + i.owner.gsub(/\v/, ' ') unless i.owner.blank?
+        str += "; Notation: " + i.notation.gsub(/\v/, ' ') unless i.notation.blank?
         str += "; Schriftform:  " + i.non1.gsub(/\v/, ' ') unless i.non1.blank?
-        str += "; Schriftspiegel:  " + i.size.gsub(/\v/, ' ') unless i.size.blank?
-        str += "; Seitenzahlen:  " + i.comment8.gsub(/\v/, ' ') unless i.comment8.blank?
 #        str += "; Wasserzeichen: " + i.non3.gsub(/\v/, '') unless i.non3.blank? # Watermark
-        str += "; Kalligraphien:  " + i.comment2.gsub(/\v/, ' ') unless i.comment2.blank?
+        str += "; Illumination:  " + i.comment2.gsub(/\v/, ' ') unless i.comment2.blank?
         marcxml.addSubfield(df, "a", str)
       end
       u.each do |i|
