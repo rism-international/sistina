@@ -287,7 +287,7 @@ class Piece < ApplicationRecord
     @partsVoicings = Part.where(nr: nr).pluck(:voices)
     maxVoices = 0
     sum = ""
-    vCount = {C:0, S:0, T:0, A:0, B:0, V:0}
+    vCount = {C:0, S:0, A:0, T:0, B:0, V:0}
     organ = false
     @partsVoicings.each do |part| 
       part.split(Regexp.union(delimiters)).each do |subpart| 
