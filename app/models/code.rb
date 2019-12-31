@@ -43,7 +43,7 @@ class Code < ApplicationRecord
     if not non0.blank?  
       str = ""
       str += "Aktuelle Lagenstruktur: " + non0.gsub( /\v/, ' ')
-      str += comment0.gsub( /\v/, ' ') unless comment0.blank?
+      str += " " + comment0.gsub( /\v/, ' ') unless comment0.blank?
       df = marcxml.datafield("500", "a", str) 
       marcxml.addSubfield(df, "8", "01")
     end
@@ -132,7 +132,7 @@ class Code < ApplicationRecord
     df = marcxml.datafield("593", "a", make_type)
     marcxml.addSubfield(df, "8", "01")
 
-    #marcxml.datafield("650", "a", shelf) unless shelf.blank?
+    marcxml.datafield("650", "a", shelf) unless shelf.blank?
     marcxml.datafield("650", "a", content) unless content.blank?
  
     # Bibliographical reference

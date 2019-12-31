@@ -31,10 +31,10 @@ class Piece < ApplicationRecord
           # the differentiation is not clear enough to have them numbered
           # and with their own incipit
           marcxml.addSubfield(df, "c", 1)
-          marcxml.addSubfield(df, "d", i.title) unless i.title.blank?
+#          marcxml.addSubfield(df, "d", i.title) unless i.title.blank?
           marcxml.addSubfield(df, "t", make_textIncipit(i)) unless make_textIncipit(i).blank?
           marcxml.addSubfield(df, "m", make_scoring(i)) unless make_scoring(i).blank?
-          marcxml.addSubfield(df, "q", "composed by " << i.composer) unless i.composer.blank?
+#          marcxml.addSubfield(df, "q", "composed by " << i.composer) unless i.composer.blank?
           marcxml.addSubfield(df, "q", i.comment.gsub(/\v/, '')) unless i.comment.blank?
         end
       end
